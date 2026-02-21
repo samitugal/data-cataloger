@@ -89,34 +89,34 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| CONN-01 | Phase 1 | Pending |
-| CONN-02 | Phase 1 | Pending |
-| CONN-03 | Phase 1 | Pending |
-| CONN-04 | Phase 1 | Pending |
-| CONN-05 | Phase 1 | Pending |
-| SCHM-01 | Phase 2 | Pending |
-| SCHM-02 | Phase 2 | Pending |
-| SCHM-03 | Phase 2 | Pending |
-| SCHM-04 | Phase 2 | Pending |
-| SCHM-05 | Phase 2 | Pending |
-| SCHM-06 | Phase 2 | Pending |
-| CATL-01 | Phase 3 | Pending |
-| CATL-02 | Phase 3 | Pending |
-| CATL-03 | Phase 3 | Pending |
-| CATL-04 | Phase 3 | Pending |
-| CATL-05 | Phase 3 | Pending |
-| CATL-06 | Phase 3 | Pending |
-| CATL-07 | Phase 3 | Pending |
-| GRPH-01 | Phase 4 | Pending |
-| GRPH-02 | Phase 4 | Pending |
-| GRPH-03 | Phase 4 | Pending |
-| GRPH-04 | Phase 4 | Pending |
-| GRPH-05 | Phase 4 | Pending |
-| WEBI-01 | Phase 5 | Pending |
-| WEBI-02 | Phase 5 | Pending |
-| WEBI-03 | Phase 5 | Pending |
-| WEBI-04 | Phase 5 | Pending |
-| WEBI-05 | Phase 5 | Pending |
+| CONN-01 | Phase 2 | Pending |
+| CONN-02 | Phase 2 | Pending |
+| CONN-03 | Phase 2 | Pending |
+| CONN-04 | Phase 2 | Pending |
+| CONN-05 | Phase 2 | Pending |
+| SCHM-01 | Phase 3 | Pending |
+| SCHM-02 | Phase 3 | Pending |
+| SCHM-03 | Phase 3 | Pending |
+| SCHM-04 | Phase 3 | Pending |
+| SCHM-05 | Phase 3 | Pending |
+| SCHM-06 | Phase 3 | Pending |
+| CATL-01 | Phase 4 | Pending |
+| CATL-02 | Phase 4 | Pending |
+| CATL-03 | Phase 4 | Pending |
+| CATL-04 | Phase 4 | Pending |
+| CATL-05 | Phase 4 | Pending |
+| CATL-06 | Phase 4 | Pending |
+| CATL-07 | Phase 4 | Pending |
+| GRPH-01 | Phase 5 | Pending |
+| GRPH-02 | Phase 5 | Pending |
+| GRPH-03 | Phase 5 | Pending |
+| GRPH-04 | Phase 5 | Pending |
+| GRPH-05 | Phase 5 | Pending |
+| WEBI-01 | Phase 6 | Pending |
+| WEBI-02 | Phase 6 | Pending |
+| WEBI-03 | Phase 6 | Pending |
+| WEBI-04 | Phase 6 | Pending |
+| WEBI-05 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 25 total
@@ -125,4 +125,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2025-02-20*
-*Last updated: 2025-02-20 after initial definition*
+*Last updated: 2025-02-21 after roadmap creation*
