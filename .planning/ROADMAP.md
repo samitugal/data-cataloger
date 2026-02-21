@@ -46,10 +46,11 @@ Plans:
   3. System successfully connects to MySQL/MariaDB databases and reports status
   4. Connection failures display clear error messages (wrong credentials, network issues, etc.)
   5. Database credentials are encrypted or stored securely (not in plain text)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- TBD
+- [ ] 02-01-PLAN.md — Configuration and credential management with Pydantic and keyring
+- [ ] 02-02-PLAN.md — PostgreSQL and MySQL connectors with factory pattern
 
 ### Phase 3: Schema Analysis
 **Goal**: System extracts complete schema metadata and calculates table processing order
@@ -120,7 +121,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Project Setup | 1/2 | In Progress | - |
-| 2. Database Connection | 0/TBD | Not started | - |
+| 2. Database Connection | 0/2 | Not started | - |
 | 3. Schema Analysis | 0/TBD | Not started | - |
 | 4. LLM Cataloging Engine | 0/TBD | Not started | - |
 | 5. Graph Storage | 0/TBD | Not started | - |
