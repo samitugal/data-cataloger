@@ -1,0 +1,17 @@
+[project]
+name = "automated-data-cataloger"
+version = "0.1.0"
+description = "Automatically document legacy databases using LLM-powered analysis"
+readme = "README.md"
+authors = [
+    { name = "samitugal", email = "tugalsami@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+automated-data-cataloger = "automated_data_cataloger:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
