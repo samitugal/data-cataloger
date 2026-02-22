@@ -21,8 +21,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SCHM-02**: System extracts columns with data types for each table
 - [x] **SCHM-03**: System extracts primary key constraints
 - [x] **SCHM-04**: System extracts foreign key relationships between tables
-- [ ] **SCHM-05**: System calculates dependency ranking based on FK relationships
-- [ ] **SCHM-06**: System orders tables from most independent to most dependent
+- [x] **SCHM-05**: System calculates dependency ranking based on FK relationships
+- [x] **SCHM-06**: System orders tables from most independent to most dependent
 
 ### LLM Cataloging
 
@@ -98,8 +98,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SCHM-02 | Phase 3 | Complete |
 | SCHM-03 | Phase 3 | Complete |
 | SCHM-04 | Phase 3 | Complete |
-| SCHM-05 | Phase 3 | Pending |
-| SCHM-06 | Phase 3 | Pending |
+| SCHM-05 | Phase 3 | Complete |
+| SCHM-06 | Phase 3 | Complete |
 | CATL-01 | Phase 4 | Pending |
 | CATL-02 | Phase 4 | Pending |
 | CATL-03 | Phase 4 | Pending |
