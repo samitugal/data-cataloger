@@ -49,7 +49,7 @@ class CredentialManager:
         Returns:
             Password if found in keyring, None otherwise
         """
-        return keyring.get_password(self.service_name, username)  # type: ignore[no-any-return]
+        return keyring.get_password(self.service_name, username)
 
     def get_from_env(self, key: str) -> str | None:
         """Get credential from environment variable.
