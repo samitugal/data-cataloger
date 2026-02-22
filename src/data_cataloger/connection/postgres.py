@@ -31,6 +31,20 @@ class PostgreSQLConnector:
         self.config = config
         self.conn: Connection[tuple[object, ...]] | None = None
 
+    @property
+    def connection(self) -> Connection[tuple[object, ...]]:
+        """Active database connection.
+
+        Returns:
+            Active psycopg Connection object
+
+        Raises:
+            RuntimeError: If not connected
+        """
+        if self.conn is None:
+            raise RuntimeError("Not connected to database. Call connect() first.")
+        return self.conn
+
     def connect(self) -> None:
         """Establish connection to PostgreSQL database.
 

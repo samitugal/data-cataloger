@@ -6,7 +6,7 @@ error reporting.
 """
 
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Any, Protocol
 
 
 @dataclass
@@ -28,13 +28,26 @@ class DatabaseConnector(Protocol):
     """Protocol defining the interface for database connectors.
 
     All database connector implementations must implement these methods
-    to be compatible with the factory pattern and connection manager.
+    and properties to be compatible with the factory pattern and connection
+    manager.
+
+    Attributes:
+        connection: Active database connection object supporting cursor()
 
     Methods:
         connect: Establish connection to the database
         test_connection: Test if connection is alive
         close: Close the database connection
     """
+
+    @property
+    def connection(self) -> Any:
+        """Active database connection object.
+
+        Returns:
+            Database connection supporting cursor() context manager
+        """
+        ...
 
     def connect(self) -> None:
         """Establish connection to the database.

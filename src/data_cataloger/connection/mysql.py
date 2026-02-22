@@ -35,6 +35,20 @@ class MySQLConnector:
         self.config = config
         self.conn: Any = None  # mysql.connector.connect() returns union type
 
+    @property
+    def connection(self) -> Any:
+        """Active database connection.
+
+        Returns:
+            Active mysql.connector connection object
+
+        Raises:
+            RuntimeError: If not connected
+        """
+        if self.conn is None:
+            raise RuntimeError("Not connected to database. Call connect() first.")
+        return self.conn
+
     def connect(self) -> None:
         """Establish connection to MySQL database.
 
