@@ -10,9 +10,9 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Database Connection
 
 - [x] **CONN-01**: User can enter database connection credentials (host, port, username, password, database name)
-- [ ] **CONN-02**: System supports PostgreSQL database connections
-- [ ] **CONN-03**: System supports MySQL/MariaDB database connections
-- [ ] **CONN-04**: System tests connection and displays success or failure feedback
+- [x] **CONN-02**: System supports PostgreSQL database connections
+- [x] **CONN-03**: System supports MySQL/MariaDB database connections
+- [x] **CONN-04**: System tests connection and displays success or failure feedback
 - [x] **CONN-05**: System securely handles database credentials (not stored in plain text)
 
 ### Schema Analysis
@@ -90,9 +90,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | CONN-01 | Phase 2 | Complete |
-| CONN-02 | Phase 2 | Pending |
-| CONN-03 | Phase 2 | Pending |
-| CONN-04 | Phase 2 | Pending |
+| CONN-02 | Phase 2 | Complete |
+| CONN-03 | Phase 2 | Complete |
+| CONN-04 | Phase 2 | Complete |
 | CONN-05 | Phase 2 | Complete |
 | SCHM-01 | Phase 3 | Pending |
 | SCHM-02 | Phase 3 | Pending |
