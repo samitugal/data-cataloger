@@ -17,7 +17,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Schema Analysis
 
-- [ ] **SCHM-01**: System extracts all tables from connected database
+- [x] **SCHM-01**: System extracts all tables from connected database
 - [x] **SCHM-02**: System extracts columns with data types for each table
 - [x] **SCHM-03**: System extracts primary key constraints
 - [x] **SCHM-04**: System extracts foreign key relationships between tables
@@ -94,7 +94,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CONN-03 | Phase 2 | Complete |
 | CONN-04 | Phase 2 | Complete |
 | CONN-05 | Phase 2 | Complete |
-| SCHM-01 | Phase 3 | Pending |
+| SCHM-01 | Phase 3 | Complete |
 | SCHM-02 | Phase 3 | Complete |
 | SCHM-03 | Phase 3 | Complete |
 | SCHM-04 | Phase 3 | Complete |
