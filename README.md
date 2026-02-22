@@ -1,10 +1,10 @@
-# Automated Data Cataloger
+# Data Cataloger
 
 Automatically document legacy databases using LLM-powered analysis.
 
 ## Overview
 
-Automated Data Cataloger helps teams understand large, undocumented databases by using AI to infer table purposes, data sensitivity levels, and usage patterns. Instead of manually documenting hundreds of tables, the tool analyzes schema metadata and relationships to generate comprehensive catalog documentation.
+Data Cataloger helps teams understand large, undocumented databases by using AI to infer table purposes, data sensitivity levels, and usage patterns. Instead of manually documenting hundreds of tables, the tool analyzes schema metadata and relationships to generate comprehensive catalog documentation.
 
 ## Key Features
 
@@ -26,7 +26,7 @@ Automated Data Cataloger helps teams understand large, undocumented databases by
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd Automated-Data-Cataloger
+cd data-cataloger
 ```
 
 2. Install dependencies using uv:
@@ -40,7 +40,7 @@ uv sync
 
 ```bash
 # Run the cataloger (implementation in progress)
-uv run automated-data-cataloger
+uv run data-cataloger
 ```
 
 ## Project Structure

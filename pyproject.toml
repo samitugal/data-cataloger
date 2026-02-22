@@ -1,5 +1,5 @@
 [project]
-name = "automated-data-cataloger"
+name = "data-cataloger"
 version = "0.1.0"
 description = "Automatically document legacy databases using LLM-powered analysis"
 readme = "README.md"
@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-automated-data-cataloger = "automated_data_cataloger:main"
+data-cataloger = "data_cataloger:main"
 
 [build-system]
 requires = ["hatchling"]
