@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2025-02-20)
 ## Current Position
 
 Phase: 3 of 6 (Schema Analysis)
-Plan: 4 of 5 (03-04-PLAN.md completed)
+Plan: 2 of 5 (03-02-PLAN.md completed)
 Status: Complete
-Last activity: 2026-02-22 — Completed 03-04-PLAN.md (Dependency Graph Builder)
+Last activity: 2026-02-22 — Completed 03-02-PLAN.md (PostgreSQL Schema Extractor)
 
 Progress: [████░░░░░░] 42%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 4.0 minutes
-- Total execution time: 0.40 hours
+- Total plans completed: 7
+- Average duration: 3.9 minutes
+- Total execution time: 0.45 hours
 
 **By Phase:**
 
@@ -29,10 +29,10 @@ Progress: [████░░░░░░] 42%
 |-------|-------|-------|----------|
 | 01-project-setup | 2 | 7 min | 3.5 min |
 | 02-database-connection | 2 | 14 min | 7 min |
-| 03-schema-analysis | 2 | 4 min | 2 min |
+| 03-schema-analysis | 3 | 7 min | 2.3 min |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (7 min), 02-02 (7 min), 03-01 (2 min), 03-04 (2 min)
+- Last 5 plans: 02-02 (7 min), 03-01 (2 min), 03-04 (2 min), 03-03 (3 min), 03-02 (3 min)
 - Trend: Fast execution for model-only tasks, stable at 7 min for complex implementation
 
 *Updated after each plan completion*
@@ -40,6 +40,7 @@ Progress: [████░░░░░░] 42%
 | Phase 03 P01 | 2 | 2 tasks | 3 files |
 | Phase 03 P04 | 2 | 2 tasks | 2 files |
 | Phase 03 P03 | 3 | 2 tasks | 2 files |
+| Phase 03 P02 | 3 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -70,9 +71,13 @@ Recent decisions affecting current work:
 - [Phase 03-01]: Store raw data_type strings without normalization (LLM interprets types)
 - [Phase 03-01]: Use tuple instead of list for collections (enforces immutability)
 - [Phase 03-01]: Support composite foreign keys with ordinal_position field
+- [Phase 03-02]: Add connection property to DatabaseConnector protocol for schema extraction
 - [Phase 03-04]: Filter self-references in dependency graph (hierarchical tables not cycles)
 - [Phase 03-04]: Return tuple (ordered_tables, cycle_nodes) for both success and error paths
 - [Phase 03-04]: Use static_order() not prepare() for complete batch ordering
+- [Phase 03-03]: Use CONSTRAINT_NAME='PRIMARY' for MySQL PK identification (not constraint_type)
+- [Phase 03-03]: Filter FKs with REFERENCED_TABLE_NAME IS NOT NULL (critical for correctness)
+- [Phase 03-03]: Use database name as schema parameter in MySQL (not 'public')
 
 ### Pending Todos
 
@@ -85,5 +90,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-22
-Stopped at: Completed 03-04-PLAN.md (Dependency Graph Builder)
-Resume file: .planning/phases/03-schema-analysis/03-04-SUMMARY.md
+Stopped at: Completed 03-02-PLAN.md (PostgreSQL Schema Extractor)
+Resume file: .planning/phases/03-schema-analysis/03-02-SUMMARY.md
