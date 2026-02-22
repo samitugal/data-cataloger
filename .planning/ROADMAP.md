@@ -62,10 +62,14 @@ Plans:
   3. System builds dependency graph from foreign key relationships
   4. System calculates dependency ranking (tables with no FK dependencies rank highest)
   5. System outputs ordered table list from most independent to most dependent
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- TBD
+- [ ] 03-01-PLAN.md — Schema metadata dataclasses with immutable models
+- [ ] 03-02-PLAN.md — PostgreSQL schema extractor using information_schema
+- [ ] 03-03-PLAN.md — MySQL schema extractor using INFORMATION_SCHEMA
+- [ ] 03-04-PLAN.md — Dependency graph builder with topological sort
+- [ ] 03-05-PLAN.md — Schema introspector coordinator for complete analysis
 
 ### Phase 4: LLM Cataloging Engine
 **Goal**: LLM agent analyzes tables and generates rich catalog entries with context
@@ -122,11 +126,11 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 |-------|----------------|--------|-----------|
 | 1. Project Setup | 1/2 | In Progress | - |
 | 2. Database Connection | 0/2 | Not started | - |
-| 3. Schema Analysis | 0/TBD | Not started | - |
+| 3. Schema Analysis | 0/5 | Not started | - |
 | 4. LLM Cataloging Engine | 0/TBD | Not started | - |
 | 5. Graph Storage | 0/TBD | Not started | - |
 | 6. Web Interface | 0/TBD | Not started | - |
 
 ---
 *Created: 2025-02-21*
-*Last updated: 2026-02-21*
+*Last updated: 2026-02-22*
