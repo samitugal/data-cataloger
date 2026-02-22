@@ -82,10 +82,13 @@ Plans:
   4. When analyzing dependent tables, LLM can reference already-cataloged parent tables for context
   5. System processes tables in dependency order (independent tables first)
   6. Cataloging uses OpenAI GPT-4 API for all LLM operations
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- TBD
+- [ ] 04-01-PLAN.md — Catalog models and state management with Pydantic
+- [ ] 04-02-PLAN.md — OpenAI client wrapper with retry logic
+- [ ] 04-03-PLAN.md — Prompt templates and builder for context-aware analysis
+- [ ] 04-04-PLAN.md — Cataloging agent orchestrator for sequential processing
 
 ### Phase 5: Graph Storage
 **Goal**: Catalog data persists in Neo4j as queryable knowledge graph
@@ -127,7 +130,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 1. Project Setup | 1/2 | In Progress | - |
 | 2. Database Connection | 0/2 | Not started | - |
 | 3. Schema Analysis | 4/5 | In Progress|  |
-| 4. LLM Cataloging Engine | 0/TBD | Not started | - |
+| 4. LLM Cataloging Engine | 0/4 | Not started | - |
 | 5. Graph Storage | 0/TBD | Not started | - |
 | 6. Web Interface | 0/TBD | Not started | - |
 
