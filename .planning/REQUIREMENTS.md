@@ -36,10 +36,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Graph Storage
 
-- [ ] **GRPH-01**: System stores catalog data in Neo4j graph database
-- [ ] **GRPH-02**: Each table is represented as a node with properties (name, description, sensitivity)
-- [ ] **GRPH-03**: FK relationships are represented as edges between table nodes
-- [ ] **GRPH-04**: Example queries are stored as properties on table nodes
+- [x] **GRPH-01**: System stores catalog data in Neo4j graph database
+- [x] **GRPH-02**: Each table is represented as a node with properties (name, description, sensitivity)
+- [x] **GRPH-03**: FK relationships are represented as edges between table nodes
+- [x] **GRPH-04**: Example queries are stored as properties on table nodes
 - [x] **GRPH-05**: System can query Neo4j to retrieve catalog information
 
 ### Web Interface
@@ -107,10 +107,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CATL-05 | Phase 4 | Complete |
 | CATL-06 | Phase 4 | Complete |
 | CATL-07 | Phase 4 | Complete |
-| GRPH-01 | Phase 5 | Pending |
-| GRPH-02 | Phase 5 | Pending |
-| GRPH-03 | Phase 5 | Pending |
-| GRPH-04 | Phase 5 | Pending |
+| GRPH-01 | Phase 5 | Complete |
+| GRPH-02 | Phase 5 | Complete |
+| GRPH-03 | Phase 5 | Complete |
+| GRPH-04 | Phase 5 | Complete |
 | GRPH-05 | Phase 5 | Complete |
 | WEBI-01 | Phase 6 | Pending |
 | WEBI-02 | Phase 6 | Pending |
