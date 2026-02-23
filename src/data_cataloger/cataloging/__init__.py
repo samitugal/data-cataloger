@@ -1,5 +1,10 @@
-"""LLM-powered table cataloging.
+"""LLM-powered database table cataloging.
 
-Uses AI to analyze database schemas and infer table purposes,
-data sensitivity levels, and usage patterns.
+Analyzes database tables using OpenAI GPT-4o to generate business descriptions,
+data sensitivity classifications, and example SQL queries.
 """
+
+from data_cataloger.cataloging.agent import CatalogingAgent
+from data_cataloger.cataloging.models import CatalogEntry, CatalogState, TableCatalog
+
+__all__ = ["CatalogingAgent", "CatalogEntry", "CatalogState", "TableCatalog"]
