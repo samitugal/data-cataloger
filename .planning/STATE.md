@@ -89,6 +89,11 @@ Recent decisions affecting current work:
 - [Phase 04-01]: Use Literal types instead of Enum for OpenAI strict mode compatibility
 - [Phase 04-01]: Separate Pydantic model (TableCatalog) from storage dataclass (CatalogEntry)
 - [Phase 04-01]: CatalogState filters self-references and missing parents in get_parent_context
+- [Phase 04-02]: Use OpenAI structured outputs with parse() method instead of create() with function calling
+- [Phase 04-02]: Retry only on RateLimitError (not all exceptions) for predictable error handling
+- [Phase 04-02]: Set retry to 6 attempts with 1-60s exponential backoff based on OpenAI recommendations
+- [Phase 04-02]: Use type ignore for messages parameter (OpenAI types too restrictive for practical use)
+- [Phase 04-02]: Raise ValueError on None response from OpenAI (defensive error handling)
 - [Phase 04-03]: Separate system prompt from user prompts (consistent agent behavior)
 - [Phase 04-03]: Include parent context in user prompts (dependency-aware analysis)
 - [Phase 04-03]: Conditional prompt sections for PK, FK, parent context (reduce bloat)

@@ -32,7 +32,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CATL-04**: LLM generates example SQL queries for each table
 - [x] **CATL-05**: LLM agent can reference already-cataloged tables for context during analysis
 - [ ] **CATL-06**: System processes tables in dependency order (independent first)
-- [ ] **CATL-07**: System uses OpenAI GPT-4 API for LLM analysis
+- [x] **CATL-07**: System uses OpenAI GPT-4 API for LLM analysis
 
 ### Graph Storage
 
@@ -106,7 +106,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CATL-04 | Phase 4 | Complete |
 | CATL-05 | Phase 4 | Complete |
 | CATL-06 | Phase 4 | Pending |
-| CATL-07 | Phase 4 | Pending |
+| CATL-07 | Phase 4 | Complete |
 | GRPH-01 | Phase 5 | Pending |
 | GRPH-02 | Phase 5 | Pending |
 | GRPH-03 | Phase 5 | Pending |
