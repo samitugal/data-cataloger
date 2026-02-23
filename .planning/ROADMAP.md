@@ -100,10 +100,12 @@ Plans:
   3. Foreign key relationships create edges between table nodes in the graph
   4. Example queries are stored as properties on table nodes
   5. Application can query Neo4j to retrieve catalog information for any table
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- TBD
+- [ ] 05-01-PLAN.md — Neo4j config, Docker compose, and Neo4jWriter with MERGE upsert
+- [ ] 05-02-PLAN.md — GraphRepository with read query methods
+- [ ] 05-03-PLAN.md — Pipeline integration, storage public API, and tests
 
 ### Phase 6: Web Interface
 **Goal**: Users can monitor cataloging progress and explore table relationships visually
@@ -123,17 +125,17 @@ Plans:
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
+Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Project Setup | 1/2 | In Progress | - |
 | 2. Database Connection | 0/2 | Not started | - |
 | 3. Schema Analysis | 4/5 | In Progress|  |
-| 4. LLM Cataloging Engine | 0/4 | Not started | - |
-| 5. Graph Storage | 0/TBD | Not started | - |
+| 4. LLM Cataloging Engine | 4/4 | Complete | 2026-02-23 |
+| 5. Graph Storage | 0/3 | Not started | - |
 | 6. Web Interface | 0/TBD | Not started | - |
 
 ---
 *Created: 2025-02-21*
-*Last updated: 2026-02-22*
+*Last updated: 2026-02-23*
