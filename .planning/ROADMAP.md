@@ -85,10 +85,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Catalog models and state management with Pydantic
-- [ ] 04-02-PLAN.md — OpenAI client wrapper with retry logic
-- [ ] 04-03-PLAN.md — Prompt templates and builder for context-aware analysis
-- [ ] 04-04-PLAN.md — Cataloging agent orchestrator for sequential processing
+- [x] 04-01-PLAN.md — Catalog models and state management with Pydantic
+- [x] 04-02-PLAN.md — OpenAI client wrapper with retry logic
+- [x] 04-03-PLAN.md — Prompt templates and builder for context-aware analysis
+- [x] 04-04-PLAN.md — Cataloging agent orchestrator for sequential processing
 
 ### Phase 5: Graph Storage
 **Goal**: Catalog data persists in Neo4j as queryable knowledge graph
