@@ -30,7 +30,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **CATL-02**: LLM generates business description for each table (what it represents, business process)
 - [x] **CATL-03**: LLM classifies data sensitivity for each table (PII, financial, public, internal)
 - [x] **CATL-04**: LLM generates example SQL queries for each table
-- [ ] **CATL-05**: LLM agent can reference already-cataloged tables for context during analysis
+- [x] **CATL-05**: LLM agent can reference already-cataloged tables for context during analysis
 - [ ] **CATL-06**: System processes tables in dependency order (independent first)
 - [ ] **CATL-07**: System uses OpenAI GPT-4 API for LLM analysis
 
@@ -104,7 +104,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | CATL-02 | Phase 4 | Complete |
 | CATL-03 | Phase 4 | Complete |
 | CATL-04 | Phase 4 | Complete |
-| CATL-05 | Phase 4 | Pending |
+| CATL-05 | Phase 4 | Complete |
 | CATL-06 | Phase 4 | Pending |
 | CATL-07 | Phase 4 | Pending |
 | GRPH-01 | Phase 5 | Pending |

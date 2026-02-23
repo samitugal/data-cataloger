@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2025-02-20)
 ## Current Position
 
 Phase: 4 of 6 (LLM Cataloging Engine)
-Plan: 1 of 4 (04-01-PLAN.md completed)
+Plan: 3 of 4 (04-03-PLAN.md completed)
 Status: In Progress
-Last activity: 2026-02-23 — Completed 04-01-PLAN.md (Catalog Data Models)
+Last activity: 2026-02-23 — Completed 04-03-PLAN.md (Prompt Templates and Builder)
 
 Progress: [████░░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 3.4 minutes
-- Total execution time: 0.5 hours
+- Total plans completed: 10
+- Average duration: 3.5 minutes
+- Total execution time: 0.6 hours
 
 **By Phase:**
 
@@ -30,11 +30,11 @@ Progress: [████░░░░░░] 50%
 | 01-project-setup | 2 | 7 min | 3.5 min |
 | 02-database-connection | 2 | 14 min | 7 min |
 | 03-schema-analysis | 4 | 10 min | 2.5 min |
-| 04-llm-cataloging-engine | 1 | 2 min | 2 min |
+| 04-llm-cataloging-engine | 2 | 9 min | 4.5 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-04 (2 min), 03-03 (3 min), 03-02 (3 min), 03-05 (3 min), 04-01 (2 min)
-- Trend: Consistently fast execution (2-3 min per plan)
+- Last 5 plans: 03-03 (3 min), 03-02 (3 min), 03-05 (3 min), 04-01 (2 min), 04-02 (7 min)
+- Trend: Phase 4 plans taking longer (setup-heavy tasks)
 
 *Updated after each plan completion*
 | Phase 02 P02 | 7 | 3 tasks | 7 files |
@@ -44,6 +44,8 @@ Progress: [████░░░░░░] 50%
 | Phase 03 P02 | 3 | 2 tasks | 5 files |
 | Phase 03 P05 | 3 | 3 tasks | 2 files |
 | Phase 04 P01 | 2 | 3 tasks | 2 files |
+| Phase 04 P02 | 7 | 4 tasks | 5 files |
+| Phase 04-llm-cataloging-engine P03 | 7 | 3 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -87,6 +89,9 @@ Recent decisions affecting current work:
 - [Phase 04-01]: Use Literal types instead of Enum for OpenAI strict mode compatibility
 - [Phase 04-01]: Separate Pydantic model (TableCatalog) from storage dataclass (CatalogEntry)
 - [Phase 04-01]: CatalogState filters self-references and missing parents in get_parent_context
+- [Phase 04-03]: Separate system prompt from user prompts (consistent agent behavior)
+- [Phase 04-03]: Include parent context in user prompts (dependency-aware analysis)
+- [Phase 04-03]: Conditional prompt sections for PK, FK, parent context (reduce bloat)
 
 ### Pending Todos
 
@@ -100,4 +105,4 @@ None yet.
 
 Last session: 2026-02-23
 Stopped at: Completed 04-01-PLAN.md (Catalog Data Models)
-Resume file: .planning/phases/04-llm-cataloging-engine/04-01-SUMMARY.md
+Resume file: .planning/phases/04-llm-cataloging-engine/04-03-SUMMARY.md
