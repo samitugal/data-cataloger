@@ -226,8 +226,9 @@ def test_catalog_database_circular_dependency() -> None:
         circular_dependencies=["table_a", "table_b"],
     )
 
-    # Attempt to catalog
-    agent = CatalogingAgent()
+    # Attempt to catalog (use mock client to avoid OPENAI_API_KEY requirement)
+    mock_client = Mock()
+    agent = CatalogingAgent(client=mock_client)
     with pytest.raises(ValueError) as exc_info:
         agent.catalog_database(schema_result)
 

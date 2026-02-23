@@ -28,15 +28,18 @@ class MockResponse(BaseModel):
 
 def test_client_initialization_success() -> None:
     """Test successful client initialization with API key present."""
-    with patch("os.getenv") as mock_getenv:
+    with patch("data_cataloger.cataloging.client.os.getenv") as mock_getenv:
         # Mock OPENAI_API_KEY environment variable
         mock_getenv.return_value = "sk-test-key-12345"
 
-        # Should initialize without error
-        client = CatalogClient()
+        # Mock OpenAI client to avoid real API key validation
+        with patch("data_cataloger.cataloging.client.OpenAI") as mock_openai:
+            # Should initialize without error
+            client = CatalogClient()
 
-        # Verify client was created
-        assert client.client is not None
+            # Verify client was created
+            assert client.client is not None
+            mock_openai.assert_called_once()
 
 
 def test_client_initialization_missing_api_key() -> None:

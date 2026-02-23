@@ -29,11 +29,39 @@ How state accumulation enables context-aware analysis:
     This creates a snowball effect where later tables benefit from richer context.
 """
 
+import logging
+from typing import Protocol
+
 from data_cataloger.cataloging.client import CatalogClient
 from data_cataloger.cataloging.models import CatalogEntry, CatalogState, TableCatalog
 from data_cataloger.cataloging.prompts import SYSTEM_PROMPT, build_user_prompt
 from data_cataloger.schema.introspector import SchemaAnalysisResult
-from data_cataloger.schema.models import TableMetadata
+from data_cataloger.schema.models import ForeignKeyMetadata, TableMetadata
+
+logger = logging.getLogger(__name__)
+
+
+class CatalogWriter(Protocol):
+    """Protocol for catalog storage backends.
+
+    Defines the interface for writing catalog entries and relationships to
+    persistent storage. Implementations include Neo4jWriter for graph storage.
+    """
+
+    def write_entry(
+        self, entry: CatalogEntry, database_name: str, database_type: str = "postgresql"
+    ) -> None:
+        """Write a catalog entry to storage."""
+        ...
+
+    def write_relationships(
+        self,
+        table_name: str,
+        foreign_keys: tuple[ForeignKeyMetadata, ...],
+        database_name: str,
+    ) -> None:
+        """Write foreign key relationships to storage."""
+        ...
 
 
 class CatalogingAgent:
@@ -55,17 +83,27 @@ class CatalogingAgent:
         ...     print(f"{table_name}: {entry.description}")
     """
 
-    def __init__(self, client: CatalogClient | None = None) -> None:
-        """Initialize agent with OpenAI client.
+    def __init__(
+        self,
+        client: CatalogClient | None = None,
+        writer: CatalogWriter | None = None,
+    ) -> None:
+        """Initialize agent with OpenAI client and optional storage writer.
 
         Args:
             client: CatalogClient instance. If None, creates new client.
                     Allows dependency injection for testing with mock clients.
+            writer: Optional storage writer implementing CatalogWriter protocol.
+                    If provided, catalog entries are persisted after each table.
         """
         self.client = client or CatalogClient()
+        self._writer = writer
 
     def catalog_database(
-        self, schema_result: SchemaAnalysisResult
+        self,
+        schema_result: SchemaAnalysisResult,
+        database_name: str = "",
+        database_type: str = "postgresql",
     ) -> dict[str, CatalogEntry]:
         """Catalog all tables in dependency order with context accumulation.
 
@@ -77,6 +115,9 @@ class CatalogingAgent:
         Args:
             schema_result: SchemaAnalysisResult from SchemaIntrospector containing
                           tables metadata and processing_order
+            database_name: Database name for storage grouping. If empty and writer
+                          is provided, derives from first table's schema_name.
+            database_type: Database type identifier (default: postgresql)
 
         Returns:
             Dictionary mapping table_name to CatalogEntry for all tables
@@ -90,6 +131,11 @@ class CatalogingAgent:
                 f"Cannot catalog with circular dependencies: "
                 f"{schema_result.circular_dependencies}"
             )
+
+        # Derive database_name from first table's schema if not provided
+        db_name = database_name
+        if not db_name and self._writer and schema_result.tables:
+            db_name = schema_result.tables[0].schema_name
 
         # Create fast lookup dict for table metadata
         tables_by_name: dict[str, TableMetadata] = {
@@ -113,7 +159,40 @@ class CatalogingAgent:
             # Add to state for future tables to reference
             state.add_entry(entry)
 
+            # Write to storage if writer is provided
+            if self._writer:
+                self._write_to_storage(entry, table_meta, db_name, database_type)
+
         return state.entries
+
+    def _write_to_storage(
+        self,
+        entry: CatalogEntry,
+        table_meta: TableMetadata,
+        database_name: str,
+        database_type: str,
+    ) -> None:
+        """Write catalog entry and relationships to storage with error handling.
+
+        Catches and logs write failures without halting the cataloging pipeline.
+        This ensures that storage issues don't prevent catalog generation.
+
+        Args:
+            entry: Catalog entry to persist
+            table_meta: Table metadata with foreign key information
+            database_name: Database name for storage grouping
+            database_type: Database type identifier
+        """
+        if not self._writer:
+            return
+
+        try:
+            self._writer.write_entry(entry, database_name, database_type)
+            self._writer.write_relationships(
+                entry.table_name, table_meta.foreign_keys, database_name
+            )
+        except Exception as e:
+            logger.warning(f"Failed to write {entry.table_name} to storage: {e}")
 
     def _catalog_table(
         self, table: TableMetadata, parent_context: list[CatalogEntry]
