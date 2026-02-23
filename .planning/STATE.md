@@ -5,22 +5,22 @@
 See: .planning/PROJECT.md (updated 2025-02-20)
 
 **Core value:** Eliminate manual database documentation effort for large legacy databases (200+ tables) by using AI to infer table purposes, data sensitivity, and usage patterns from schema metadata and relationships.
-**Current focus:** Phase 4: LLM Cataloging Engine
+**Current focus:** Phase 5: Graph Storage
 
 ## Current Position
 
-Phase: 4 of 6 (LLM Cataloging Engine)
-Plan: 4 of 4 (04-04-PLAN.md completed)
-Status: Phase Complete
-Last activity: 2026-02-23 — Completed 04-04-PLAN.md (Cataloging Agent Orchestrator)
+Phase: 5 of 6 (Graph Storage)
+Plan: 2 of 3 (05-02-PLAN.md completed)
+Status: In Progress
+Last activity: 2026-02-23 — Completed 05-02-PLAN.md (Graph Repository Query Methods)
 
-Progress: [████░░░░░░] 58%
+Progress: [█████░░░░░] 63%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
-- Average duration: 3.6 minutes
+- Total plans completed: 12
+- Average duration: 3.5 minutes
 - Total execution time: 0.7 hours
 
 **By Phase:**
@@ -31,10 +31,11 @@ Progress: [████░░░░░░] 58%
 | 02-database-connection | 2 | 14 min | 7 min |
 | 03-schema-analysis | 4 | 10 min | 2.5 min |
 | 04-llm-cataloging-engine | 4 | 20 min | 5 min |
+| 05-graph-storage | 1 | 2 min | 2 min |
 
 **Recent Trend:**
-- Last 5 plans: 03-05 (3 min), 04-01 (2 min), 04-02 (7 min), 04-03 (7 min), 04-04 (4 min)
-- Trend: Phase 4 complete - LLM cataloging engine fully implemented
+- Last 5 plans: 04-01 (2 min), 04-02 (7 min), 04-03 (7 min), 04-04 (4 min), 05-02 (2 min)
+- Trend: Phase 5 started - graph storage query layer implemented
 
 *Updated after each plan completion*
 | Phase 02 P02 | 7 | 3 tasks | 7 files |
@@ -47,6 +48,7 @@ Progress: [████░░░░░░] 58%
 | Phase 04 P02 | 7 | 4 tasks | 5 files |
 | Phase 04 P03 | 7 | 3 tasks | 2 files |
 | Phase 04 P04 | 4 | 4 tasks | 3 files |
+| Phase 05 P02 | 2 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -103,6 +105,10 @@ Recent decisions affecting current work:
 - [Phase 04-04]: Use CatalogState for context accumulation (already-cataloged tables inform later analysis)
 - [Phase 04-04]: Use assertion for Pydantic type narrowing (mypy strict compliance)
 - [Phase 04-04]: Export only public API (agent, models) not implementation details (client, prompts)
+- [Phase 05-02]: Return CatalogEntry domain objects not graph-specific DTOs (consistent with existing codebase)
+- [Phase 05-02]: Filter stub nodes by checking description IS NOT NULL (uncataloged FK references excluded)
+- [Phase 05-02]: Use two separate queries for get_full_graph (simpler than complex Cypher WITH/collect)
+- [Phase 05-02]: Materialize Neo4j Result objects to lists before returning (prevents "Result consumed" errors)
 
 ### Pending Todos
 
@@ -115,5 +121,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-23
-Stopped at: Completed 04-04-PLAN.md (Cataloging Agent Orchestrator) - Phase 4 Complete
-Resume file: .planning/phases/04-llm-cataloging-engine/04-04-SUMMARY.md
+Stopped at: Completed 05-02-PLAN.md (Graph Repository Query Methods)
+Resume file: .planning/phases/05-graph-storage/05-02-SUMMARY.md
