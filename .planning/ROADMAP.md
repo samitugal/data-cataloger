@@ -117,10 +117,14 @@ Plans:
   3. UI renders interactive graph visualization of table relationships
   4. Clicking on a table node displays its catalog details (description, sensitivity, example queries)
   5. Visual indicators distinguish processed tables from pending ones
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
-- TBD
+- [ ] 06-01-PLAN.md — FastAPI setup, CORS, static files, health endpoint
+- [ ] 06-02-PLAN.md — Table list and detail API endpoints
+- [ ] 06-03-PLAN.md — Graph data API for Cytoscape.js
+- [ ] 06-04-PLAN.md — Frontend table list and detail views
+- [ ] 06-05-PLAN.md — Graph visualization and SSE progress tracking
 
 ## Progress
 
@@ -134,7 +138,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Schema Analysis | 4/5 | In Progress|  |
 | 4. LLM Cataloging Engine | 4/4 | Complete | 2026-02-23 |
 | 5. Graph Storage | 3/3 | Complete | 2026-02-23 |
-| 6. Web Interface | 0/TBD | Not started | - |
+| 6. Web Interface | 0/5 | Not started | - |
 
 ---
 *Created: 2025-02-21*
