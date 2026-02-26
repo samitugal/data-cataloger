@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface Position {
   x: number
@@ -26,8 +26,17 @@ export function InteractiveEdge({
   referencedColumn,
   cardWidth,
   cardHeight,
+  index = 0,
 }: InteractiveEdgeProps) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+
+  // Delay edge appearance - cards appear first, then edges pop in
+  useEffect(() => {
+    const delay = 300 + index * 100 // Base delay + staggered per edge
+    const timer = setTimeout(() => setIsVisible(true), delay)
+    return () => clearTimeout(timer)
+  }, [index])
 
   // Determine best connection points based on relative positions
   const fromCenterX = from.x + cardWidth / 2
@@ -104,11 +113,20 @@ export function InteractiveEdge({
   const popupWidth = Math.max(180, maxTextLength * 8 + 40)
   const popupHeight = 50
 
+  // Don't render until visible
+  if (!isVisible) return null
+
   return (
     <g
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="cursor-pointer"
+      style={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'scale(1)' : 'scale(0.8)',
+        transformOrigin: `${startX}px ${startY}px`,
+        transition: 'opacity 0.3s ease-out, transform 0.3s ease-out',
+      }}
     >
       {/* Invisible wider path for easier hover */}
       <path
