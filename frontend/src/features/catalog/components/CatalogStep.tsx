@@ -22,15 +22,17 @@ export function CatalogStep() {
 
   const [elapsedTime, setElapsedTime] = useState(0)
 
-  // Update elapsed time
+  // Update elapsed time - stop when cataloging completes
   useEffect(() => {
+    if (!isRunning) return
+
     const interval = setInterval(() => {
-      if (startTime) {
+      if (startTime && isRunning) {
         setElapsedTime((Date.now() - startTime) / 1000)
       }
     }, 100)
     return () => clearInterval(interval)
-  }, [startTime])
+  }, [startTime, isRunning])
 
   const handleSSEMessage = useCallback(
     (eventType: string, data: unknown) => {

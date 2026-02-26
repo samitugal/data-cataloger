@@ -1,5 +1,6 @@
 import { useRef, useState, useMemo } from 'react'
 import { LiveTableCard } from './LiveTableCard'
+import { InteractiveEdge } from './InteractiveEdge'
 import { useCatalogStore } from '@/shared/stores/catalogStore'
 
 interface Position {
@@ -33,37 +34,8 @@ interface RelationshipLine {
   to: string
   fromPos: Position
   toPos: Position
-}
-
-function OrthogonalPath({ from, to }: { from: Position; to: Position }) {
-  // Calculate center points of cards
-  const startX = from.x + CARD_WIDTH / 2
-  const startY = from.y + CARD_HEIGHT
-  const endX = to.x + CARD_WIDTH / 2
-  const endY = to.y
-
-  // Create orthogonal path (90 degree turns)
-  const midY = startY + (endY - startY) / 2
-
-  const path = `M ${startX} ${startY} 
-                L ${startX} ${midY} 
-                L ${endX} ${midY} 
-                L ${endX} ${endY}`
-
-  return (
-    <g>
-      <path
-        d={path}
-        fill="none"
-        stroke="#94a3b8"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        markerEnd="url(#arrowhead)"
-        className="transition-all duration-300"
-      />
-    </g>
-  )
+  column: string
+  referencedColumn: string
 }
 
 export function RelationshipCanvas() {
@@ -100,6 +72,8 @@ export function RelationshipCanvas() {
             to: fk.references_table,
             fromPos,
             toPos,
+            column: fk.column,
+            referencedColumn: fk.references_column,
           })
         }
       })
@@ -132,32 +106,22 @@ export function RelationshipCanvas() {
       >
         {/* SVG Layer for relationship lines */}
         <svg
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0"
           width={canvasSize.width}
           height={canvasSize.height}
-          style={{ zIndex: 1 }}
+          style={{ zIndex: 5 }}
         >
-          <defs>
-            <marker
-              id="arrowhead"
-              markerWidth="10"
-              markerHeight="7"
-              refX="9"
-              refY="3.5"
-              orient="auto"
-            >
-              <polygon
-                points="0 0, 10 3.5, 0 7"
-                fill="#94a3b8"
-              />
-            </marker>
-          </defs>
-
           {relationshipLines.map((line, index) => (
-            <OrthogonalPath
+            <InteractiveEdge
               key={`${line.from}-${line.to}-${index}`}
               from={line.fromPos}
               to={line.toPos}
+              fromTable={line.from}
+              toTable={line.to}
+              column={line.column}
+              referencedColumn={line.referencedColumn}
+              cardWidth={CARD_WIDTH}
+              cardHeight={CARD_HEIGHT}
             />
           ))}
         </svg>
