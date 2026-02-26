@@ -14,6 +14,7 @@ interface InteractiveEdgeProps {
   referencedColumn: string
   cardWidth: number
   cardHeight: number
+  index?: number
 }
 
 export function InteractiveEdge({
@@ -45,6 +46,13 @@ export function InteractiveEdge({
   // Arrow points
   const arrowX = endX - arrowLength * Math.cos(angle)
   const arrowY = endY - arrowLength * Math.sin(angle)
+
+  // Calculate dynamic popup width based on text length
+  const fromText = `${fromTable}.${column}`
+  const toText = `${toTable}.${referencedColumn}`
+  const maxTextLength = Math.max(fromText.length, toText.length)
+  const popupWidth = Math.max(180, maxTextLength * 8 + 40)
+  const popupHeight = 50
 
   return (
     <g
@@ -83,46 +91,48 @@ export function InteractiveEdge({
 
       {/* Hover tooltip */}
       {isHovered && (
-        <g>
+        <g style={{ pointerEvents: 'none' }}>
           {/* Background */}
           <rect
-            x={midX - 80}
-            y={midY - 30}
-            width="160"
-            height="40"
-            rx="6"
+            x={midX - popupWidth / 2}
+            y={midY - popupHeight / 2}
+            width={popupWidth}
+            height={popupHeight}
+            rx="8"
             fill="white"
-            stroke="#e2e8f0"
-            strokeWidth="1"
-            filter="drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1))"
+            stroke="#6366f1"
+            strokeWidth="2"
+            filter="drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15))"
           />
           {/* Relationship text */}
           <text
             x={midX}
-            y={midY - 10}
+            y={midY - 8}
             textAnchor="middle"
-            className="text-xs font-semibold fill-gray-700"
-            style={{ fontSize: '11px' }}
+            fontWeight="600"
+            fill="#374151"
+            style={{ fontSize: '12px' }}
           >
-            {fromTable}.{column}
+            {fromText}
           </text>
           <text
             x={midX}
-            y={midY + 5}
+            y={midY + 8}
             textAnchor="middle"
-            className="text-xs fill-gray-500"
-            style={{ fontSize: '10px' }}
+            fill="#6366f1"
+            style={{ fontSize: '14px' }}
           >
-            →
+            ↓
           </text>
           <text
             x={midX}
-            y={midY + 18}
+            y={midY + 22}
             textAnchor="middle"
-            className="text-xs font-semibold fill-indigo-600"
-            style={{ fontSize: '11px' }}
+            fontWeight="600"
+            fill="#6366f1"
+            style={{ fontSize: '12px' }}
           >
-            {toTable}.{referencedColumn}
+            {toText}
           </text>
         </g>
       )}

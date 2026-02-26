@@ -104,29 +104,7 @@ export function RelationshipCanvas() {
           minHeight: '100%'
         }}
       >
-        {/* SVG Layer for relationship lines */}
-        <svg
-          className="absolute inset-0"
-          width={canvasSize.width}
-          height={canvasSize.height}
-          style={{ zIndex: 5 }}
-        >
-          {relationshipLines.map((line, index) => (
-            <InteractiveEdge
-              key={`${line.from}-${line.to}-${index}`}
-              from={line.fromPos}
-              to={line.toPos}
-              fromTable={line.from}
-              toTable={line.to}
-              column={line.column}
-              referencedColumn={line.referencedColumn}
-              cardWidth={CARD_WIDTH}
-              cardHeight={CARD_HEIGHT}
-            />
-          ))}
-        </svg>
-
-        {/* Cards Layer */}
+        {/* Cards Layer - rendered first so edges appear on top when hovered */}
         {tableOrder.map((tableName, index) => {
           const table = tables.get(tableName)
           const position = cardPositions.get(tableName)
@@ -139,7 +117,7 @@ export function RelationshipCanvas() {
               style={{
                 left: position.x,
                 top: position.y,
-                zIndex: selectedTable === tableName ? 20 : 10,
+                zIndex: 10,
               }}
             >
               <LiveTableCard
@@ -152,6 +130,29 @@ export function RelationshipCanvas() {
             </div>
           )
         })}
+
+        {/* SVG Layer for relationship lines - rendered after cards, z-index lower */}
+        <svg
+          className="absolute inset-0 pointer-events-none"
+          width={canvasSize.width}
+          height={canvasSize.height}
+          style={{ zIndex: 1 }}
+        >
+          {relationshipLines.map((line, index) => (
+            <InteractiveEdge
+              key={`${line.from}-${line.to}-${index}`}
+              from={line.fromPos}
+              to={line.toPos}
+              fromTable={line.from}
+              toTable={line.to}
+              column={line.column}
+              referencedColumn={line.referencedColumn}
+              cardWidth={CARD_WIDTH}
+              cardHeight={CARD_HEIGHT}
+              index={index}
+            />
+          ))}
+        </svg>
       </div>
     </div>
   )
