@@ -175,6 +175,58 @@ def create_mcp_server() -> Server:
                 },
             ),
             Tool(
+                name="get_neighbors",
+                description="Get a table and all its directly connected neighbors",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "table_name": {
+                            "type": "string",
+                            "description": "Name of the table to get neighbors for",
+                        },
+                        "database_name": {
+                            "type": "string",
+                            "description": "Name of the database",
+                        },
+                        "direction": {
+                            "type": "string",
+                            "description": (
+                                "Direction: 'outgoing', 'incoming', or 'both'"
+                            ),
+                            "default": "both",
+                        },
+                    },
+                    "required": ["table_name", "database_name"],
+                },
+            ),
+            Tool(
+                name="traverse_path",
+                description="Find path between two tables through relationships",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "from_table": {
+                            "type": "string",
+                            "description": "Starting table name",
+                        },
+                        "to_table": {
+                            "type": "string",
+                            "description": "Target table name",
+                        },
+                        "database_name": {
+                            "type": "string",
+                            "description": "Name of the database",
+                        },
+                        "max_depth": {
+                            "type": "integer",
+                            "description": "Maximum path length (default: 5)",
+                            "default": 5,
+                        },
+                    },
+                    "required": ["from_table", "to_table", "database_name"],
+                },
+            ),
+            Tool(
                 name="semantic_search",
                 description="Search tables by semantic similarity to a query",
                 inputSchema={
@@ -306,6 +358,25 @@ def _execute_tool(name: str, args: dict[str, Any], state: MCPServerState) -> dic
         graph = repo.get_full_graph(args["database_name"])
         return graph
 
+    elif name == "get_neighbors":
+        result = _get_neighbors(
+            repo._driver,
+            args["table_name"],
+            args["database_name"],
+            args.get("direction", "both"),
+        )
+        return result
+
+    elif name == "traverse_path":
+        result = _traverse_path(
+            repo._driver,
+            args["from_table"],
+            args["to_table"],
+            args["database_name"],
+            args.get("max_depth", 5),
+        )
+        return result
+
     elif name == "semantic_search":
         if not state.embedding_client:
             return {
@@ -337,6 +408,137 @@ def _execute_tool(name: str, args: dict[str, Any], state: MCPServerState) -> dic
             "code": "UNKNOWN_TOOL",
             "message": f"Unknown tool: {name}",
         }
+
+
+def _get_neighbors(
+    driver: Any,
+    table_name: str,
+    database_name: str,
+    direction: str = "both",
+) -> dict:
+    """Get a table and its directly connected neighbors."""
+    if direction == "outgoing":
+        query = """
+        MATCH (t:Table {name: $table_name, database: $database_name})
+        OPTIONAL MATCH (t)-[r:REFERENCES_VIA]->(neighbor:Table)
+        RETURN t.name AS table_name,
+               t.description AS description,
+               t.sensitivity AS sensitivity,
+               collect(DISTINCT {
+                   name: neighbor.name,
+                   relationship: 'references',
+                   fk_column: r.fk_column,
+                   referenced_column: r.referenced_column
+               }) AS neighbors
+        """
+    elif direction == "incoming":
+        query = """
+        MATCH (t:Table {name: $table_name, database: $database_name})
+        OPTIONAL MATCH (neighbor:Table)-[r:REFERENCES_VIA]->(t)
+        RETURN t.name AS table_name,
+               t.description AS description,
+               t.sensitivity AS sensitivity,
+               collect(DISTINCT {
+                   name: neighbor.name,
+                   relationship: 'referenced_by',
+                   fk_column: r.fk_column,
+                   referenced_column: r.referenced_column
+               }) AS neighbors
+        """
+    else:
+        query = """
+        MATCH (t:Table {name: $table_name, database: $database_name})
+        OPTIONAL MATCH (t)-[r1:REFERENCES_VIA]->(outgoing:Table)
+        OPTIONAL MATCH (incoming:Table)-[r2:REFERENCES_VIA]->(t)
+        WITH t,
+             collect(DISTINCT {
+                 name: outgoing.name,
+                 relationship: 'references',
+                 fk_column: r1.fk_column,
+                 referenced_column: r1.referenced_column
+             }) AS outgoing_neighbors,
+             collect(DISTINCT {
+                 name: incoming.name,
+                 relationship: 'referenced_by',
+                 fk_column: r2.fk_column,
+                 referenced_column: r2.referenced_column
+             }) AS incoming_neighbors
+        RETURN t.name AS table_name,
+               t.description AS description,
+               t.sensitivity AS sensitivity,
+               outgoing_neighbors + incoming_neighbors AS neighbors
+        """
+
+    records, _, _ = driver.execute_query(
+        query,
+        table_name=table_name,
+        database_name=database_name,
+    )
+
+    if not records:
+        return {
+            "error": True,
+            "code": "TABLE_NOT_FOUND",
+            "message": f"Table '{table_name}' not found",
+        }
+
+    record = records[0]
+    neighbors = [n for n in record["neighbors"] if n.get("name") is not None]
+
+    return {
+        "table": record["table_name"],
+        "description": record["description"],
+        "sensitivity": record["sensitivity"],
+        "neighbors": neighbors,
+        "neighbor_count": len(neighbors),
+    }
+
+
+def _traverse_path(
+    driver: Any,
+    from_table: str,
+    to_table: str,
+    database_name: str,
+    max_depth: int = 5,
+) -> dict:
+    """Find shortest path between two tables."""
+    query = """
+    MATCH (start:Table {name: $from_table, database: $database_name}),
+          (end:Table {name: $to_table, database: $database_name}),
+          path = shortestPath((start)-[:REFERENCES_VIA*1..$max_depth]-(end))
+    RETURN [node IN nodes(path) | node.name] AS tables,
+           [rel IN relationships(path) | {
+               fk_column: rel.fk_column,
+               referenced_column: rel.referenced_column
+           }] AS relationships,
+           length(path) AS path_length
+    """
+
+    records, _, _ = driver.execute_query(
+        query,
+        from_table=from_table,
+        to_table=to_table,
+        database_name=database_name,
+        max_depth=max_depth,
+    )
+
+    if not records:
+        return {
+            "from_table": from_table,
+            "to_table": to_table,
+            "path_exists": False,
+            "message": f"No path found between '{from_table}' and '{to_table}'",
+        }
+
+    record = records[0]
+    return {
+        "from_table": from_table,
+        "to_table": to_table,
+        "path_exists": True,
+        "tables": record["tables"],
+        "relationships": record["relationships"],
+        "path_length": record["path_length"],
+    }
 
 
 def create_sse_app() -> Starlette:
