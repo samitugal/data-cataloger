@@ -112,11 +112,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | GRPH-03 | Phase 5 | Complete |
 | GRPH-04 | Phase 5 | Complete |
 | GRPH-05 | Phase 5 | Complete |
-| WEBI-01 | Phase 6 | Pending |
-| WEBI-02 | Phase 6 | Pending |
-| WEBI-03 | Phase 6 | Pending |
-| WEBI-04 | Phase 6 | Pending |
-| WEBI-05 | Phase 6 | Pending |
+| WEBI-01 | Phase 6 | Complete |
+| WEBI-02 | Phase 6 | Complete |
+| WEBI-03 | Phase 6 | Complete |
+| WEBI-04 | Phase 6 | Complete |
+| WEBI-05 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 25 total
