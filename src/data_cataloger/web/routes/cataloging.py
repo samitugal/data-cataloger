@@ -95,8 +95,8 @@ def run_cataloging(
             foreign_keys = [
                 {
                     "column": fk.column_name,
-                    "references_table": fk.references_table,
-                    "references_column": fk.references_column,
+                    "references_table": fk.referenced_table,
+                    "references_column": fk.referenced_column,
                 }
                 for fk in table_meta.foreign_keys
             ]

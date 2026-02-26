@@ -45,10 +45,12 @@ export function CatalogStep() {
     [addTable, completeCataloging, wizardComplete]
   )
 
+  const dbConfig = useWizardStore((s) => s.dbConfig)
+
   useSSE({
-    url: '/api/progress',
+    url: `/api/progress?database=${dbConfig?.database || 'northwind'}`,
     onMessage: handleSSEMessage,
-    enabled: isRunning,
+    enabled: true,
   })
 
   const isComplete = !isRunning && processedTables > 0 && processedTables === totalTables
