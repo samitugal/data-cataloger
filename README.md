@@ -76,6 +76,25 @@ Data Cataloger includes an MCP (Model Context Protocol) server for AI assistant 
 
 Add to your MCP client config (e.g., Claude Desktop, Windsurf):
 
+**For Windsurf:**
+```json
+{
+  "mcpServers": {
+    "data-cataloger": {
+      "command": "/path/to/data-cataloger/.venv/bin/python",
+      "args": ["-m", "data_cataloger.mcp"],
+      "env": {
+        "NEO4J_URI": "bolt://localhost:7687",
+        "NEO4J_USER": "neo4j",
+        "NEO4J_PASSWORD": "password",
+        "OPENAI_API_KEY": "sk-..."
+      }
+    }
+  }
+}
+```
+
+**For Claude Desktop (supports cwd):**
 ```json
 {
   "mcpServers": {
