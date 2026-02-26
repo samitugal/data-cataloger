@@ -96,11 +96,10 @@ export function RelationshipCanvas() {
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-auto">
       <div
-        className="relative"
+        className="relative mx-auto"
         style={{
           width: canvasSize.width,
           height: canvasSize.height,
-          minWidth: '100%',
           minHeight: '100%'
         }}
       >
