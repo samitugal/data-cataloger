@@ -53,5 +53,8 @@ frontend-lint:
 
 all: install frontend-install
 
+mcp-server:
+	uv run python -m data_cataloger.mcp
+
 dev-all:
 	make -j2 dev frontend-dev
