@@ -71,6 +71,20 @@ services:
     networks:
       - cataloger-net
 
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: data-cataloger-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      web:
+        condition: service_healthy
+    networks:
+      - cataloger-net
+
 volumes:
   neo4j_data:
   neo4j_logs:
