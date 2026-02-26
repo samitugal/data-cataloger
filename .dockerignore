@@ -1,0 +1,43 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv
+ENV
+
+# Testing
+.pytest_cache
+.coverage
+htmlcov
+.tox
+.nox
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Build
+dist
+build
+*.egg-info
+
+# Project specific
+.planning
+.surf
+scripts
+tests
+docker/init-db/*.sql
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db

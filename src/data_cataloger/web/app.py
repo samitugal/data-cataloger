@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from data_cataloger.web.routes import graph_router, progress_router, tables_router
@@ -44,6 +45,11 @@ def create_app() -> FastAPI:
     static_dir = Path(__file__).parent / "static"
     if static_dir.exists():
         app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+        # Serve index.html at root
+        @app.get("/")
+        async def serve_index() -> FileResponse:
+            return FileResponse(static_dir / "index.html")
 
     return app
 
