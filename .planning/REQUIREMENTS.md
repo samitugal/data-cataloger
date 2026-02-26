@@ -44,11 +44,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Web Interface
 
-- [ ] **WEBI-01**: Web UI displays list of tables in the database
-- [ ] **WEBI-02**: Web UI shows real-time progress during cataloging process
-- [ ] **WEBI-03**: Web UI visualizes table relationships as a graph
-- [ ] **WEBI-04**: Web UI displays catalog details for each table (description, sensitivity, queries)
-- [ ] **WEBI-05**: Web UI indicates which tables have been processed vs pending
+- [x] **WEBI-01**: Web UI displays list of tables in the database
+- [x] **WEBI-02**: Web UI shows real-time progress during cataloging process
+- [x] **WEBI-03**: Web UI visualizes table relationships as a graph
+- [x] **WEBI-04**: Web UI displays catalog details for each table (description, sensitivity, queries)
+- [x] **WEBI-05**: Web UI indicates which tables have been processed vs pending
 
 ## v2 Requirements
 
