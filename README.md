@@ -76,37 +76,32 @@ Data Cataloger includes an MCP (Model Context Protocol) server for AI assistant 
 
 Add to your MCP client config (e.g., Claude Desktop, Windsurf):
 
-**Option 1: Docker (Recommended)**
-
-Build and run the MCP server in Docker:
+**Step 1: Build the Docker image**
 ```bash
-make mcp-docker-build
-make mcp-docker-run OPENAI_API_KEY=sk-...
+docker build -f Dockerfile.mcp -t data-cataloger-mcp .
 ```
 
-Or with docker-compose:
-```bash
-docker compose up mcp
-```
-
-**Option 2: Local with uv**
+**Step 2: Add to your MCP client config**
 
 ```json
 {
   "mcpServers": {
     "data-cataloger": {
-      "command": "uv",
-      "args": ["--directory", "/path/to/data-cataloger", "run", "python", "-m", "data_cataloger.mcp"],
-      "env": {
-        "NEO4J_URI": "bolt://localhost:7687",
-        "NEO4J_USER": "neo4j",
-        "NEO4J_PASSWORD": "password",
-        "OPENAI_API_KEY": "sk-..."
-      }
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "NEO4J_URI=bolt://host.docker.internal:7687",
+        "-e", "NEO4J_USER=neo4j",
+        "-e", "NEO4J_PASSWORD=password",
+        "-e", "OPENAI_API_KEY=sk-...",
+        "data-cataloger-mcp"
+      ]
     }
   }
 }
 ```
+
+> **Note:** Replace `sk-...` with your actual OpenAI API key.
 
 ### Running Standalone
 
