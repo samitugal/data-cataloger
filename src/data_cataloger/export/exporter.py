@@ -94,14 +94,16 @@ class CatalogExporter:
                 table.table_name, database_name
             )
 
-            lines.extend([
-                f"### {table.table_name}",
-                "",
-                f"**Sensitivity:** `{table.sensitivity}`",
-                "",
-                f"{table.description}",
-                "",
-            ])
+            lines.extend(
+                [
+                    f"### {table.table_name}",
+                    "",
+                    f"**Sensitivity:** `{table.sensitivity}`",
+                    "",
+                    f"{table.description}",
+                    "",
+                ]
+            )
 
             if relationships:
                 lines.append("**Foreign Keys:**")
@@ -125,12 +127,14 @@ class CatalogExporter:
             lines.append("---")
             lines.append("")
 
-        lines.extend([
-            "## Relationship Graph",
-            "",
-            "```mermaid",
-            "graph LR",
-        ])
+        lines.extend(
+            [
+                "## Relationship Graph",
+                "",
+                "```mermaid",
+                "graph LR",
+            ]
+        )
 
         for edge in graph.get("edges", []):
             source = edge.get("source", "")
@@ -159,13 +163,15 @@ class CatalogExporter:
             relationships = self._repo.get_relationships(
                 table.table_name, database_name
             )
-            table_data.append({
-                "name": table.table_name,
-                "description": table.description,
-                "sensitivity": table.sensitivity,
-                "example_queries": list(table.example_queries),
-                "foreign_keys": relationships,
-            })
+            table_data.append(
+                {
+                    "name": table.table_name,
+                    "description": table.description,
+                    "sensitivity": table.sensitivity,
+                    "example_queries": list(table.example_queries),
+                    "foreign_keys": relationships,
+                }
+            )
 
         return {
             "version": "1.0",

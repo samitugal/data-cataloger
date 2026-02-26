@@ -90,7 +90,7 @@ class CatalogImporter:
                     table_name=table_data["name"],
                     description=table_data.get("description", ""),
                     sensitivity=table_data.get("sensitivity", "internal"),
-                    example_queries=tuple(table_data.get("example_queries", [])),
+                    example_queries=list(table_data.get("example_queries", [])),
                 )
 
                 self._writer.write_entry(entry, database_name)

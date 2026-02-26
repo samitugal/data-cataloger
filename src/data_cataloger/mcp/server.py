@@ -348,9 +348,7 @@ def _execute_tool(name: str, args: dict[str, Any], state: MCPServerState) -> dic
         }
 
     elif name == "filter_by_sensitivity":
-        entries = repo.search_by_sensitivity(
-            args["sensitivity"], args["database_name"]
-        )
+        entries = repo.search_by_sensitivity(args["sensitivity"], args["database_name"])
         return {
             "tables": [
                 {
@@ -589,11 +587,13 @@ def create_sse_app() -> Starlette:
     server = create_mcp_server()
     sse = SseServerTransport("/messages/")
 
+    from collections.abc import AsyncGenerator
+
     @asynccontextmanager
-    async def lifespan(app: Starlette):
+    async def lifespan(app: Starlette) -> AsyncGenerator[None, None]:
         yield
 
-    async def handle_sse(request):
+    async def handle_sse(request: Any) -> None:
         async with sse.connect_sse(
             request.scope, request.receive, request._send
         ) as streams:

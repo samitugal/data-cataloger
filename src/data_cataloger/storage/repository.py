@@ -35,9 +35,7 @@ class GraphRepository:
         self._driver = driver
         self._database = database
 
-    def get_table(
-        self, table_name: str, database_name: str
-    ) -> CatalogEntry | None:
+    def get_table(self, table_name: str, database_name: str) -> CatalogEntry | None:
         """Retrieve catalog entry for a specific table.
 
         Args:
@@ -223,9 +221,7 @@ class GraphRepository:
 
         return [self._to_catalog_entry(record) for record in records]
 
-    def search_by_keyword(
-        self, keyword: str, database_name: str
-    ) -> list[CatalogEntry]:
+    def search_by_keyword(self, keyword: str, database_name: str) -> list[CatalogEntry]:
         """Search tables by keyword in descriptions.
 
         Case-insensitive search using Neo4j toLower() function. Matches

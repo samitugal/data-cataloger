@@ -3,7 +3,7 @@
 import asyncio
 import json
 from collections.abc import AsyncGenerator
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends
@@ -17,6 +17,7 @@ router = APIRouter(prefix="/api/progress", tags=["progress"])
 @dataclass
 class TableEvent:
     """Event data for a cataloged table."""
+
     table_name: str
     description: str
     sensitivity: str
@@ -28,6 +29,7 @@ class TableEvent:
 @dataclass
 class CatalogingState:
     """State for an active cataloging session."""
+
     total_tables: int = 0
     processed_tables: int = 0
     current_table: str = ""
@@ -49,7 +51,7 @@ async def progress_generator(
 
     while True:
         state = progress_state.get(database_name)
-        
+
         if state is None:
             # No cataloging started yet, send heartbeat
             yield {"event": "heartbeat", "data": json.dumps({"status": "waiting"})}
@@ -61,38 +63,44 @@ async def progress_generator(
             event = state.events[last_event_index]
             yield {
                 "event": "table:cataloged",
-                "data": json.dumps({
-                    "table_name": event.table_name,
-                    "description": event.description,
-                    "sensitivity": event.sensitivity,
-                    "example_queries": event.example_queries,
-                    "schema_name": event.schema_name,
-                    "foreign_keys": event.foreign_keys,
-                    "index": last_event_index + 1,
-                    "total": state.total_tables,
-                }),
+                "data": json.dumps(
+                    {
+                        "table_name": event.table_name,
+                        "description": event.description,
+                        "sensitivity": event.sensitivity,
+                        "example_queries": event.example_queries,
+                        "schema_name": event.schema_name,
+                        "foreign_keys": event.foreign_keys,
+                        "index": last_event_index + 1,
+                        "total": state.total_tables,
+                    }
+                ),
             }
             last_event_index += 1
 
         if state.completed:
             yield {
                 "event": "cataloging:completed",
-                "data": json.dumps({
-                    "total_tables": state.total_tables,
-                    "duration_seconds": state.duration,
-                }),
+                "data": json.dumps(
+                    {
+                        "total_tables": state.total_tables,
+                        "duration_seconds": state.duration,
+                    }
+                ),
             }
             break
 
         # Heartbeat to keep connection alive
         yield {
-            "event": "heartbeat", 
-            "data": json.dumps({
-                "status": "processing",
-                "current_table": state.current_table,
-                "processed": state.processed_tables,
-                "total": state.total_tables,
-            })
+            "event": "heartbeat",
+            "data": json.dumps(
+                {
+                    "status": "processing",
+                    "current_table": state.current_table,
+                    "processed": state.processed_tables,
+                    "total": state.total_tables,
+                }
+            ),
         }
 
         await asyncio.sleep(0.5)
@@ -130,7 +138,7 @@ def emit_table_event(
     state = progress_state.get(database_name)
     if state is None:
         return
-    
+
     event = TableEvent(
         table_name=table_name,
         description=description,

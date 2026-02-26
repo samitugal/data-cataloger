@@ -42,6 +42,7 @@ dev = [
     "pre-commit>=4.5.1",
     "ruff>=0.15.2",
     "testcontainers[neo4j]>=4.10.0",
+    "types-pyyaml>=6.0.12.20250915",
 ]
 
 [tool.ruff]
