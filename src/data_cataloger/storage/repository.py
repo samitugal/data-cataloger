@@ -257,10 +257,60 @@ class GraphRepository:
 
         return [self._to_catalog_entry(record) for record in records]
 
+    def semantic_search(
+        self,
+        query_embedding: list[float],
+        database_name: str,
+        limit: int = 5,
+        threshold: float = 0.7,
+    ) -> list[dict[str, object]]:
+        """Search tables by semantic similarity using vector embeddings.
+
+        Uses Neo4j's vector similarity function to find tables with descriptions
+        semantically similar to the query embedding.
+
+        Args:
+            query_embedding: Query vector (1536 dimensions from OpenAI)
+            database_name: Database to search in
+            limit: Maximum number of results (default: 5)
+            threshold: Minimum similarity score (default: 0.7)
+
+        Returns:
+            List of dicts with keys:
+            - name: Table name
+            - description: Table description
+            - sensitivity: Sensitivity classification
+            - similarity: Cosine similarity score (0-1)
+
+            Sorted by similarity descending. Empty list if no matches.
+        """
+        query = """
+        MATCH (t:Table {database: $database_name})
+        WHERE t.embedding IS NOT NULL AND t.description IS NOT NULL
+        WITH t, vector.similarity.cosine(t.embedding, $query_embedding) AS score
+        WHERE score >= $threshold
+        RETURN t.name AS name,
+               t.description AS description,
+               t.sensitivity AS sensitivity,
+               score AS similarity
+        ORDER BY score DESC
+        LIMIT $limit
+        """
+        records, _, _ = self._driver.execute_query(
+            query,
+            query_embedding=query_embedding,
+            database_name=database_name,
+            threshold=threshold,
+            limit=limit,
+            database_=self._database,
+        )
+
+        return [dict(record) for record in records]
+
     def _to_catalog_entry(self, record: Record) -> CatalogEntry:
         """Convert Neo4j record to CatalogEntry domain object.
 
-        Extracts record-to-CatalogEntry conversion to avoid code duplication
+        Extracts record-to-CatalogEntry extraction to avoid code duplication
         across query methods.
 
         Args:
@@ -269,7 +319,6 @@ class GraphRepository:
         Returns:
             CatalogEntry constructed from record fields
         """
-        # Handle None values for example_queries (stub nodes may not have this property)
         example_queries = record["example_queries"]
         if example_queries is None:
             example_queries = []

@@ -35,6 +35,7 @@ from typing import Protocol
 from data_cataloger.cataloging.client import CatalogClient
 from data_cataloger.cataloging.models import CatalogEntry, CatalogState, TableCatalog
 from data_cataloger.cataloging.prompts import SYSTEM_PROMPT, build_user_prompt
+from data_cataloger.embeddings.client import EmbeddingClient
 from data_cataloger.schema.introspector import SchemaAnalysisResult
 from data_cataloger.schema.models import ForeignKeyMetadata, TableMetadata
 
@@ -49,7 +50,11 @@ class CatalogWriter(Protocol):
     """
 
     def write_entry(
-        self, entry: CatalogEntry, database_name: str, database_type: str = "postgresql"
+        self,
+        entry: CatalogEntry,
+        database_name: str,
+        database_type: str = "postgresql",
+        embedding: list[float] | None = None,
     ) -> None:
         """Write a catalog entry to storage."""
         ...
@@ -87,6 +92,7 @@ class CatalogingAgent:
         self,
         client: CatalogClient | None = None,
         writer: CatalogWriter | None = None,
+        embedding_client: EmbeddingClient | None = None,
     ) -> None:
         """Initialize agent with OpenAI client and optional storage writer.
 
@@ -95,9 +101,12 @@ class CatalogingAgent:
                     Allows dependency injection for testing with mock clients.
             writer: Optional storage writer implementing CatalogWriter protocol.
                     If provided, catalog entries are persisted after each table.
+            embedding_client: Optional EmbeddingClient for generating embeddings.
+                    If provided, embeddings are generated and stored with entries.
         """
         self.client = client or CatalogClient()
         self._writer = writer
+        self._embedding_client = embedding_client
 
     def catalog_database(
         self,
@@ -177,6 +186,9 @@ class CatalogingAgent:
         Catches and logs write failures without halting the cataloging pipeline.
         This ensures that storage issues don't prevent catalog generation.
 
+        If embedding_client is configured, generates embedding from description
+        and stores it alongside the catalog entry.
+
         Args:
             entry: Catalog entry to persist
             table_meta: Table metadata with foreign key information
@@ -187,7 +199,17 @@ class CatalogingAgent:
             return
 
         try:
-            self._writer.write_entry(entry, database_name, database_type)
+            embedding: list[float] | None = None
+            if self._embedding_client and entry.description:
+                try:
+                    embedding = self._embedding_client.embed(entry.description)
+                    logger.debug(f"Generated embedding for {entry.table_name}")
+                except Exception as e:
+                    logger.warning(
+                        f"Failed to generate embedding for {entry.table_name}: {e}"
+                    )
+
+            self._writer.write_entry(entry, database_name, database_type, embedding)
             self._writer.write_relationships(
                 entry.table_name, table_meta.foreign_keys, database_name
             )

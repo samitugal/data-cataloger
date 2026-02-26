@@ -49,7 +49,11 @@ class Neo4jWriter:
         self._driver.verify_connectivity()
 
     def write_entry(
-        self, entry: CatalogEntry, database_name: str, database_type: str = "postgresql"
+        self,
+        entry: CatalogEntry,
+        database_name: str,
+        database_type: str = "postgresql",
+        embedding: list[float] | None = None,
     ) -> None:
         """Write catalog entry as Table node with Database parent using MERGE upsert.
 
@@ -68,6 +72,7 @@ class Neo4jWriter:
             entry: Catalog entry containing table_name and analysis results
             database_name: Database name for grouping (becomes Database node name)
             database_type: Database type identifier (default: postgresql)
+            embedding: Optional embedding vector for semantic search (1536 dimensions)
 
         Example:
             >>> entry = CatalogEntry(
@@ -90,11 +95,13 @@ class Neo4jWriter:
             t.description = $description,
             t.sensitivity = $sensitivity,
             t.example_queries = $example_queries,
+            t.embedding = $embedding,
             t.created_at = $timestamp
         ON MATCH SET
             t.description = $description,
             t.sensitivity = $sensitivity,
             t.example_queries = $example_queries,
+            t.embedding = $embedding,
             t.updated_at = $timestamp
 
         MERGE (db)-[:HAS_TABLE]->(t)
@@ -108,6 +115,7 @@ class Neo4jWriter:
             description=entry.description,
             sensitivity=entry.sensitivity,
             example_queries=entry.example_queries,
+            embedding=embedding,
             timestamp=now,
             database_=self._database,
         )
@@ -171,6 +179,27 @@ class Neo4jWriter:
                 constraint_name=fk.constraint_name,
                 database_=self._database,
             )
+
+    def create_vector_index(self) -> None:
+        """Create vector index for semantic search on table embeddings.
+
+        Creates a Neo4j vector index on the embedding property of Table nodes.
+        Uses cosine similarity with 1536 dimensions (OpenAI text-embedding-3-small).
+
+        Safe to call multiple times - uses IF NOT EXISTS clause.
+        """
+        query = """
+        CREATE VECTOR INDEX table_embedding_index IF NOT EXISTS
+        FOR (t:Table)
+        ON t.embedding
+        OPTIONS {
+            indexConfig: {
+                `vector.dimensions`: 1536,
+                `vector.similarity_function`: 'cosine'
+            }
+        }
+        """
+        self._driver.execute_query(query, database_=self._database)
 
     def close(self) -> None:
         """Close the Neo4j driver connection.
