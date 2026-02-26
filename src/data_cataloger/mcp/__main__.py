@@ -1,9 +1,22 @@
 """Entry point for running MCP server."""
 
-import uvicorn
+import asyncio
 
-from data_cataloger.mcp.server import create_sse_app
+from mcp.server.stdio import stdio_server
+
+from data_cataloger.mcp.server import create_mcp_server
+
+
+async def main() -> None:
+    """Run MCP server with stdio transport."""
+    server = create_mcp_server()
+    async with stdio_server() as (read_stream, write_stream):
+        await server.run(
+            read_stream,
+            write_stream,
+            server.create_initialization_options(),
+        )
+
 
 if __name__ == "__main__":
-    app = create_sse_app()
-    uvicorn.run(app, host="0.0.0.0", port=8001)
+    asyncio.run(main())
