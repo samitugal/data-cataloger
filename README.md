@@ -76,32 +76,27 @@ Data Cataloger includes an MCP (Model Context Protocol) server for AI assistant 
 
 Add to your MCP client config (e.g., Claude Desktop, Windsurf):
 
-**For Windsurf:**
-```json
-{
-  "mcpServers": {
-    "data-cataloger": {
-      "command": "/path/to/data-cataloger/.venv/bin/python",
-      "args": ["-m", "data_cataloger.mcp"],
-      "env": {
-        "NEO4J_URI": "bolt://localhost:7687",
-        "NEO4J_USER": "neo4j",
-        "NEO4J_PASSWORD": "password",
-        "OPENAI_API_KEY": "sk-..."
-      }
-    }
-  }
-}
+**Option 1: Docker (Recommended)**
+
+Build and run the MCP server in Docker:
+```bash
+make mcp-docker-build
+make mcp-docker-run OPENAI_API_KEY=sk-...
 ```
 
-**For Claude Desktop (supports cwd):**
+Or with docker-compose:
+```bash
+docker compose up mcp
+```
+
+**Option 2: Local with uv**
+
 ```json
 {
   "mcpServers": {
     "data-cataloger": {
       "command": "uv",
-      "args": ["run", "python", "-m", "data_cataloger.mcp"],
-      "cwd": "/path/to/data-cataloger",
+      "args": ["--directory", "/path/to/data-cataloger", "run", "python", "-m", "data_cataloger.mcp"],
       "env": {
         "NEO4J_URI": "bolt://localhost:7687",
         "NEO4J_USER": "neo4j",

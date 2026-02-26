@@ -65,5 +65,16 @@ all: install frontend-install
 mcp-server:
 	uv run python -m data_cataloger.mcp
 
+mcp-docker-build:
+	docker build -f Dockerfile.mcp -t data-cataloger-mcp .
+
+mcp-docker-run:
+	docker run -p 8001:8001 \
+		-e NEO4J_URI=bolt://host.docker.internal:7687 \
+		-e NEO4J_USER=neo4j \
+		-e NEO4J_PASSWORD=password \
+		-e OPENAI_API_KEY=$(OPENAI_API_KEY) \
+		data-cataloger-mcp
+
 dev-all:
 	make -j2 dev frontend-dev

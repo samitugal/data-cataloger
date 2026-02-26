@@ -1,0 +1,26 @@
+# MCP Server Docker Image
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install uv
+RUN pip install uv
+
+# Copy project files
+COPY pyproject.toml uv.lock README.md ./
+COPY src/ ./src/
+
+# Install dependencies
+RUN uv sync --frozen
+
+# Expose MCP server port
+EXPOSE 8001
+
+# Set environment variables (can be overridden)
+ENV NEO4J_URI=bolt://host.docker.internal:7687
+ENV NEO4J_USER=neo4j
+ENV NEO4J_PASSWORD=password
+ENV NEO4J_DATABASE=neo4j
+
+# Run MCP server
+CMD ["uv", "run", "python", "-m", "data_cataloger.mcp"]
