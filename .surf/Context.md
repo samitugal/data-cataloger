@@ -8,6 +8,7 @@ Data Cataloger is an AI-powered database cataloging system that automatically an
 
 - **Phase 1-6**: Complete ✅
 - **Phase 7**: Frontend Application - ✅ Complete
+- **Phase 8**: UI/UX Revamp - ✅ Complete
 
 ## Tech Stack
 
@@ -18,12 +19,12 @@ Data Cataloger is an AI-powered database cataloging system that automatically an
 - **LLM**: OpenAI GPT-4o
 - **Package Manager**: uv
 
-### Frontend (Planned)
+### Frontend
 - **Framework**: React 18 + TypeScript 5
 - **Build**: Vite
 - **Styling**: Tailwind CSS + shadcn/ui
 - **State**: Zustand
-- **Graph**: Cytoscape.js
+- **Graph**: Custom SVG Canvas (RelationshipCanvas)
 - **Data Fetching**: TanStack Query
 
 ## Key Features
@@ -78,12 +79,34 @@ docker compose up -d
 | 07 | Build & Fix | ✅ Complete |
 | 08 | Docker Integration | ✅ Complete |
 
+## Phase 8 - UI/UX Revamp
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| Card-based Layout | Tables as interactive cards | ✅ Complete |
+| Scattered Canvas | Random positioning with jitter | ✅ Complete |
+| Interactive Edges | Neo4j-style relationship lines | ✅ Complete |
+| Orthogonal Routing | 90-degree edge paths | ✅ Complete |
+| Edge Animation | Pop-in effect after cards | ✅ Complete |
+| Timer Fix | Stop on cataloging complete | ✅ Complete |
+| Dynamic Popups | Text-based popup sizing | ✅ Complete |
+
+## Key Components
+
+| Component | Description |
+|-----------|-------------|
+| `RelationshipCanvas` | Full-page canvas with scattered cards and SVG edges |
+| `InteractiveEdge` | Orthogonal edge with hover tooltip and animation |
+| `LiveTableCard` | Table card with sensitivity badge and FK preview |
+| `CatalogStep` | Wizard step with dashboard and real-time updates |
+
 ## Key Decisions
 
 1. **Feature-based structure** - Self-contained feature modules
 2. **Zustand for state** - Simple, TypeScript-friendly
 3. **SSE for real-time** - Server-Sent Events for live updates
-4. **Cytoscape.js** - Mature graph visualization library
+4. **Custom SVG Canvas** - Replaced Cytoscape.js with custom implementation
+5. **Orthogonal edges** - 90-degree routing around cards
 
 ## Environment Variables
 
@@ -99,6 +122,17 @@ OPENAI_API_KEY=sk-...
 VITE_API_URL=http://localhost:8000
 ```
 
+## Makefile Commands
+
+```bash
+make install          # Python dependencies
+make dev              # Backend server
+make frontend-dev     # Frontend server
+make docker-up        # Start all services
+make test             # Run tests
+make lint             # Lint code
+```
+
 ## Last Updated
 
-2026-02-26 - Phase 7 Frontend Implementation Complete
+2026-02-26 - Phase 8 UI/UX Revamp Complete
