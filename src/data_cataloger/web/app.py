@@ -7,7 +7,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-from data_cataloger.web.routes import graph_router, progress_router, tables_router
+from data_cataloger.web.routes import (
+    cataloging_router,
+    graph_router,
+    progress_router,
+    tables_router,
+)
 
 
 def create_app() -> FastAPI:
@@ -40,6 +45,7 @@ def create_app() -> FastAPI:
     app.include_router(tables_router)
     app.include_router(graph_router)
     app.include_router(progress_router)
+    app.include_router(cataloging_router)
 
     # Mount static files
     static_dir = Path(__file__).parent / "static"
