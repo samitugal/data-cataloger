@@ -4,6 +4,15 @@ install:
 	uv sync
 
 dev:
+	@if [ "$(FORCE)" = "1" ] || [ "$(force)" = "1" ]; then \
+		lsof -ti:8000 | xargs kill -9 2>/dev/null || true; \
+		sleep 1; \
+	fi
+	uv run uvicorn data_cataloger.web.app:app --reload --host 0.0.0.0 --port 8000
+
+dev-force:
+	lsof -ti:8000 | xargs kill -9 2>/dev/null || true
+	@sleep 1
 	uv run uvicorn data_cataloger.web.app:app --reload --host 0.0.0.0 --port 8000
 
 build:
