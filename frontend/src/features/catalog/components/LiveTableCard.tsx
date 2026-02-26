@@ -34,7 +34,7 @@ export function LiveTableCard({ table, index, isSelected, onClick, id }: LiveTab
         'shadow-md hover:shadow-xl',
         config.bg, config.border,
         isSelected && 'ring-2 ring-primary ring-offset-2',
-        isHovered && 'scale-105 z-20'
+        isHovered && 'scale-105 z-[100]'
       )}
       style={{
         animation: `popIn 0.4s ease-out ${index * 80}ms backwards`,
@@ -88,7 +88,7 @@ export function LiveTableCard({ table, index, isSelected, onClick, id }: LiveTab
       {isHovered && (
         <div
           className={cn(
-            'absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[280px] z-50',
+            'absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-[280px] z-[200]',
             'bg-white rounded-lg shadow-2xl border-2 p-4',
             'animate-in fade-in zoom-in-95 slide-in-from-bottom-2 duration-200',
             config.border
