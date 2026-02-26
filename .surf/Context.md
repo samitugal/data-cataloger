@@ -138,11 +138,11 @@ make lint             # Lint code
 ## Phase 9 & 10 - MCP Server & Semantic Search
 
 ### MCP Server (Phase 9)
-- SSE transport for web/IDE integration
+- stdio transport for Windsurf/Claude Desktop
+- Docker image for portable deployment
 - Stateful Neo4j connection
-- Read-only catalog access
 
-### MCP Tools
+### MCP Tools (10 total)
 | Tool | Description |
 |------|-------------|
 | `list_tables` | List all cataloged tables |
@@ -151,13 +151,38 @@ make lint             # Lint code
 | `filter_by_sensitivity` | Filter by sensitivity |
 | `get_relationships` | Get FK relationships |
 | `get_graph` | Full relationship graph |
+| `get_neighbors` | Get table with connected neighbors |
+| `traverse_path` | Find path between tables |
 | `semantic_search` | Vector similarity search |
+| `export_catalog` | Export in JSON/YAML/Markdown |
 
 ### Semantic Search (Phase 10)
 - OpenAI `text-embedding-3-small` (1536 dim)
 - Neo4j vector index with cosine similarity
 - Embeddings generated during cataloging
 
+## Phase 11 - Export/Import
+
+| Feature | Status |
+|---------|--------|
+| JSON Export | ✅ Complete |
+| YAML Export | ✅ Complete |
+| Markdown Documentation | ✅ Complete |
+| JSON/YAML Import | ✅ Complete |
+| API Endpoints | ✅ Complete |
+| MCP Tool | ✅ Complete |
+
+## Code Quality
+
+| Metric | Value |
+|--------|-------|
+| Total Files | 41 |
+| Lines of Code | 4,418 |
+| Test Coverage | 66% |
+| Tests Passing | 186/186 |
+| Lint Errors | 0 |
+| Type Errors | 0 |
+
 ## Last Updated
 
-2026-02-26 - Phase 9 & 10 Complete (MCP Server + Semantic Search)
+2026-02-26 - Phase 11 Complete (Export/Import) + Code Cleanup
