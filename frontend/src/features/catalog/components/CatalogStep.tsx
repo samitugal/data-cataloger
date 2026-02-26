@@ -1,5 +1,5 @@
 import { useCallback, useState, useEffect } from 'react'
-import { LiveTableCard } from './LiveTableCard'
+import { RelationshipCanvas } from './RelationshipCanvas'
 import { useSSE } from '@/shared/hooks/useSSE'
 import { useCatalogStore } from '@/shared/stores/catalogStore'
 import { useWizardStore } from '@/shared/stores/wizardStore'
@@ -20,7 +20,6 @@ export function CatalogStep() {
   const setStep = useWizardStore((s) => s.setStep)
   const startTime = useWizardStore((s) => s.startTime)
 
-  const [selectedTable, setSelectedTable] = useState<string | null>(null)
   const [elapsedTime, setElapsedTime] = useState(0)
 
   // Update elapsed time
@@ -146,37 +145,20 @@ export function CatalogStep() {
 
       {/* Full Page Canvas - Excalidraw Style */}
       <div className="flex-1 relative overflow-hidden canvas-grid bg-gray-50">
-        <div className="absolute inset-0 overflow-auto p-8">
-          {tableOrder.length === 0 ? (
-            <div className="h-full flex items-center justify-center">
-              <div className="text-center">
-                <Loader2 className="h-16 w-16 text-primary animate-spin mx-auto mb-4" />
-                <p className="text-xl font-medium text-gray-700">Discovering tables...</p>
-                <p className="text-sm text-gray-500">Tables will pop in as they are cataloged</p>
-              </div>
+        {tableOrder.length === 0 ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center">
+              <Loader2 className="h-16 w-16 text-primary animate-spin mx-auto mb-4" />
+              <p className="text-xl font-medium text-gray-700">Discovering tables...</p>
+              <p className="text-sm text-gray-500">Tables will pop in as they are cataloged</p>
             </div>
-          ) : (
-            <div className="flex flex-wrap gap-6 justify-center items-start pt-4">
-              {tableOrder.map((tableName, index) => {
-                const table = tables.get(tableName)
-                if (!table) return null
-                return (
-                  <LiveTableCard
-                    key={tableName}
-                    id={`table-${tableName}`}
-                    table={table}
-                    index={index}
-                    isSelected={selectedTable === tableName}
-                    onClick={() => setSelectedTable(tableName === selectedTable ? null : tableName)}
-                  />
-                )
-              })}
-            </div>
-          )}
-        </div>
+          </div>
+        ) : (
+          <RelationshipCanvas />
+        )}
 
         {/* Bottom Legend */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/95 backdrop-blur-sm rounded-full px-5 py-2.5 border shadow-lg">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-white/95 backdrop-blur-sm rounded-full px-5 py-2.5 border shadow-lg z-30">
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded bg-red-100 border-2 border-red-300" />
             <span className="text-xs font-medium text-gray-600">PII</span>
