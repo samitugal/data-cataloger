@@ -22,5 +22,5 @@ ENV NEO4J_USER=neo4j
 ENV NEO4J_PASSWORD=password
 ENV NEO4J_DATABASE=neo4j
 
-# Run MCP server
+# Run MCP server using uv run (handles venv activation)
 CMD ["uv", "run", "python", "-m", "data_cataloger.mcp"]
