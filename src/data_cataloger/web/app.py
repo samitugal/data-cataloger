@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 
 from data_cataloger.web.routes import (
     cataloging_router,
+    export_router,
     graph_router,
     progress_router,
     tables_router,
@@ -46,6 +47,7 @@ def create_app() -> FastAPI:
     app.include_router(graph_router)
     app.include_router(progress_router)
     app.include_router(cataloging_router)
+    app.include_router(export_router)
 
     # Mount static files
     static_dir = Path(__file__).parent / "static"

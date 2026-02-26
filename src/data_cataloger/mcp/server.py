@@ -254,6 +254,25 @@ def create_mcp_server() -> Server:
                     "required": ["query", "database_name"],
                 },
             ),
+            Tool(
+                name="export_catalog",
+                description="Export catalog in JSON, YAML, or Markdown format",
+                inputSchema={
+                    "type": "object",
+                    "properties": {
+                        "database_name": {
+                            "type": "string",
+                            "description": "Name of the database",
+                        },
+                        "format": {
+                            "type": "string",
+                            "description": "Format: 'json', 'yaml', or 'markdown'",
+                            "default": "json",
+                        },
+                    },
+                    "required": ["database_name"],
+                },
+            ),
         ]
 
     @server.call_tool()
@@ -400,6 +419,30 @@ def _execute_tool(name: str, args: dict[str, Any], state: MCPServerState) -> dic
             "query": args["query"],
             "results": results,
             "count": len(results),
+        }
+
+    elif name == "export_catalog":
+        from data_cataloger.export.exporter import CatalogExporter
+
+        exporter = CatalogExporter(repo)
+        export_format = args.get("format", "json")
+
+        if export_format == "json":
+            content = exporter.export_json(args["database_name"])
+        elif export_format == "yaml":
+            content = exporter.export_yaml(args["database_name"])
+        elif export_format == "markdown":
+            content = exporter.export_markdown(args["database_name"])
+        else:
+            return {
+                "error": True,
+                "code": "INVALID_FORMAT",
+                "message": f"Invalid format: {export_format}",
+            }
+
+        return {
+            "format": export_format,
+            "content": content,
         }
 
     else:
