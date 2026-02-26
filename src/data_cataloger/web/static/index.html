@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Cataloger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/cytoscape@3.30.0/dist/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-indigo-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Data Cataloger</h1>
+            <nav>
+                <a href="#tables" class="px-4 hover:text-indigo-200">Tables</a>
+                <a href="#graph" class="px-4 hover:text-indigo-200">Graph</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <!-- Table List Panel -->
+            <div class="lg:col-span-1 bg-white rounded-lg shadow p-4">
+                <h2 class="text-xl font-semibold mb-4">Tables</h2>
+                <div id="search-box" class="mb-4">
+                    <input type="text" id="search-input" placeholder="Search tables..."
+                        class="w-full p-2 border rounded focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div id="table-list" class="space-y-2">
+                    <p class="text-gray-500">Loading tables...</p>
+                </div>
+            </div>
+
+            <!-- Detail/Graph Panel -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow p-4">
+                <div id="detail-panel" class="hidden">
+                    <h2 id="detail-title" class="text-xl font-semibold mb-4"></h2>
+                    <div id="detail-content"></div>
+                </div>
+                <div id="graph-panel">
+                    <h2 class="text-xl font-semibold mb-4">Relationship Graph</h2>
+                    <div id="graph-container" class="h-96 border rounded bg-gray-50"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Bar (hidden by default) -->
+        <div id="progress-panel" class="hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4">
+            <div class="container mx-auto">
+                <div class="flex justify-between mb-2">
+                    <span id="progress-text">Cataloging in progress...</span>
+                    <span id="progress-count">0/0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                    <div id="progress-bar" class="bg-indigo-600 h-2 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/table-list.js"></script>
+    <script src="/static/js/table-detail.js"></script>
+    <script src="/static/js/graph.js"></script>
+    <script src="/static/js/progress.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+
+</html>
