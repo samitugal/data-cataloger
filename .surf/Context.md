@@ -9,6 +9,8 @@ Data Cataloger is an AI-powered database cataloging system that automatically an
 - **Phase 1-6**: Complete ✅
 - **Phase 7**: Frontend Application - ✅ Complete
 - **Phase 8**: UI/UX Revamp - ✅ Complete
+- **Phase 9**: MCP Server - ✅ Complete
+- **Phase 10**: Semantic Search - ✅ Complete
 
 ## Tech Stack
 
@@ -133,6 +135,29 @@ make test             # Run tests
 make lint             # Lint code
 ```
 
+## Phase 9 & 10 - MCP Server & Semantic Search
+
+### MCP Server (Phase 9)
+- SSE transport for web/IDE integration
+- Stateful Neo4j connection
+- Read-only catalog access
+
+### MCP Tools
+| Tool | Description |
+|------|-------------|
+| `list_tables` | List all cataloged tables |
+| `get_table` | Get table details with FK |
+| `search_tables` | Keyword search |
+| `filter_by_sensitivity` | Filter by sensitivity |
+| `get_relationships` | Get FK relationships |
+| `get_graph` | Full relationship graph |
+| `semantic_search` | Vector similarity search |
+
+### Semantic Search (Phase 10)
+- OpenAI `text-embedding-3-small` (1536 dim)
+- Neo4j vector index with cosine similarity
+- Embeddings generated during cataloging
+
 ## Last Updated
 
-2026-02-26 - Phase 8 UI/UX Revamp Complete
+2026-02-26 - Phase 9 & 10 Complete (MCP Server + Semantic Search)
