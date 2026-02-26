@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from data_cataloger.cataloging.agent import CatalogingAgent
 from data_cataloger.connection.config import DatabaseConfig
 from data_cataloger.connection.postgres import PostgreSQLConnector
+from data_cataloger.embeddings.client import EmbeddingClient
 from data_cataloger.schema.introspector import SchemaIntrospector
 from data_cataloger.storage.writer import Neo4jWriter
 from data_cataloger.web.dependencies import get_database_name, get_neo4j_driver
@@ -65,9 +66,12 @@ def run_cataloging(
         
         # Create Neo4j writer
         writer = Neo4jWriter(neo4j_driver, "neo4j")
-        
-        # Create agent with custom callback
-        agent = CatalogingAgent(writer=writer)
+
+        # Create embedding client for semantic search
+        embedding_client = EmbeddingClient()
+
+        # Create agent with writer and embedding client
+        agent = CatalogingAgent(writer=writer, embedding_client=embedding_client)
         
         # Build table metadata lookup
         tables_by_name = {t.table_name: t for t in schema_result.tables}
