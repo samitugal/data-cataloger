@@ -156,7 +156,88 @@ async def start_cataloging(
     neo4j_driver: Annotated[Any, Depends(get_neo4j_driver)],
 ) -> CatalogingResponse:
     """Start cataloging a database in the background."""
-    # Use database name from request
+    # If database is empty, discover all databases and catalog them
+    if not request.database or request.database.strip() == "":
+        # Discover available databases
+        system_dbs = {"postgres", "template0", "template1", "mysql",
+                      "information_schema", "performance_schema", "sys"}
+
+        try:
+            # Connect to default database to list others
+            temp_config = DatabaseConfig(
+                db_type=request.db_type,
+                host=request.host,
+                port=request.port,
+                database="postgres" if request.db_type == "postgresql" else "mysql",
+                username=request.username,
+                password=request.password,
+            )
+            connector = PostgreSQLConnector(temp_config)
+            connector.connect()
+
+            if request.db_type == "postgresql":
+                query = "SELECT datname FROM pg_database WHERE datistemplate = false"
+            else:
+                query = "SHOW DATABASES"
+
+            cursor = connector.conn.cursor()
+            cursor.execute(query)
+            rows = cursor.fetchall()
+            cursor.close()
+            connector.close()
+
+            databases = [row[0] for row in rows if row[0] not in system_dbs]
+        except Exception as e:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Failed to discover databases: {e}"
+            )
+
+        if not databases:
+            raise HTTPException(
+                status_code=400,
+                detail="No user databases found to catalog"
+            )
+
+        # Catalog each database
+        total_tables = 0
+        for db_name in databases:
+            config = DatabaseConfig(
+                db_type=request.db_type,
+                host=request.host,
+                port=request.port,
+                database=db_name,
+                username=request.username,
+                password=request.password,
+            )
+
+            try:
+                connector = PostgreSQLConnector(config)
+                connector.connect()
+                introspector = SchemaIntrospector()
+                schema_result = introspector.introspect_schema(
+                    connector, schema="public"
+                )
+                total_tables += len(schema_result.tables)
+                connector.close()
+
+                reset_cataloging(db_name)
+                background_tasks.add_task(
+                    run_cataloging,
+                    config,
+                    neo4j_driver,
+                    db_name,
+                )
+            except Exception as e:
+                logger.warning(f"Skipping database {db_name}: {e}")
+
+        return CatalogingResponse(
+            status="started",
+            message=f"Cataloging {len(databases)} databases ({total_tables} tables)",
+            total_tables=total_tables,
+        )
+
+    # Single database cataloging
     database_name = request.database
 
     # Reset any previous state
