@@ -1,5 +1,6 @@
 """Cataloging API endpoint for starting real-time database cataloging."""
 
+import logging
 import time
 from typing import Annotated, Any, Literal
 
@@ -59,6 +60,9 @@ class CatalogingResponse(BaseModel):
     total_tables: int = 0
 
 
+logger = logging.getLogger(__name__)
+
+
 def run_cataloging(
     config: DatabaseConfig,
     neo4j_driver: Any,
@@ -66,6 +70,7 @@ def run_cataloging(
 ) -> None:
     """Background task to run cataloging with event emission."""
     start_time = time.time()
+    logger.info(f"Starting cataloging for database: {database_name}")
 
     try:
         # Connect to source database

@@ -2,12 +2,15 @@
 
 import asyncio
 import json
+import logging
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
 from typing import Any
 
 from fastapi import APIRouter
 from sse_starlette.sse import EventSourceResponse
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/api/progress", tags=["progress"])
 
@@ -133,8 +136,10 @@ def emit_table_event(
     foreign_keys: list[dict[str, str]],
 ) -> None:
     """Emit event when a table is cataloged."""
+    logger.info(f"Emitting event for table: {table_name} (db: {database_name})")
     state = progress_state.get(database_name)
     if state is None:
+        logger.warning(f"No progress state found for database: {database_name}")
         return
 
     event = TableEvent(
@@ -148,6 +153,7 @@ def emit_table_event(
     state.events.append(event)
     state.processed_tables += 1
     state.current_table = table_name
+    logger.info(f"Event emitted. Total events: {len(state.events)}")
 
 
 def complete_cataloging(database_name: str, duration: float) -> None:

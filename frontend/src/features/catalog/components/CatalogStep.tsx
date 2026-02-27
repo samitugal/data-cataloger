@@ -62,7 +62,7 @@ export function CatalogStep() {
   const dbConfig = useWizardStore((s) => s.dbConfig)
 
   useSSE({
-    url: `/api/progress?database=${dbConfig?.database || 'northwind'}`,
+    url: `/api/progress?database_name=${dbConfig?.database || 'northwind'}`,
     onMessage: handleSSEMessage,
     enabled: true,
   })
