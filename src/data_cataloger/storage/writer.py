@@ -87,8 +87,13 @@ class Neo4jWriter:
         now = datetime.now(UTC).isoformat()
 
         query = """
+        MERGE (repo:MetadataRepository {name: 'default'})
+        ON CREATE SET repo.created_at = $timestamp
+
         MERGE (db:Database {name: $database_name, type: $database_type})
         ON CREATE SET db.created_at = $timestamp
+
+        MERGE (repo)-[:CONTAINS_DATABASE]->(db)
 
         MERGE (t:Table {name: $table_name, database: $database_name})
         ON CREATE SET

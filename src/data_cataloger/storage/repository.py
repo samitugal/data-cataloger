@@ -36,13 +36,13 @@ class GraphRepository:
         self._database = database
 
     def list_databases(self) -> list[dict[str, str]]:
-        """List all cataloged databases.
+        """List all cataloged databases via MetadataRepository.
 
         Returns:
             List of dicts with keys: name, type, created_at, table_count
         """
         query = """
-        MATCH (db:Database)
+        MATCH (repo:MetadataRepository)-[:CONTAINS_DATABASE]->(db:Database)
         OPTIONAL MATCH (db)-[:HAS_TABLE]->(t:Table)
         WHERE t.description IS NOT NULL
         RETURN db.name AS name,
