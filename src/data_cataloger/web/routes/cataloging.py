@@ -23,10 +23,27 @@ from data_cataloger.web.routes.progress import (
 router = APIRouter(prefix="/api/cataloging", tags=["cataloging"])
 
 
+class ConnectionRequest(BaseModel):
+    """Request to connect and discover databases."""
+
+    host: str = "localhost"
+    port: int = 5432
+    username: str = "postgres"
+    password: str = "postgres"
+    db_type: Literal["postgresql", "mysql"] = "postgresql"
+
+
+class DatabaseListResponse(BaseModel):
+    """Response with available databases."""
+
+    databases: list[str]
+    count: int
+
+
 class CatalogingRequest(BaseModel):
     """Request to start cataloging a database."""
 
-    host: str = "postgres"
+    host: str = "localhost"
     port: int = 5432
     database: str = "northwind"
     username: str = "postgres"
@@ -131,10 +148,12 @@ def run_cataloging(
 async def start_cataloging(
     request: CatalogingRequest,
     background_tasks: BackgroundTasks,
-    database_name: Annotated[str, Depends(get_database_name)],
     neo4j_driver: Annotated[Any, Depends(get_neo4j_driver)],
 ) -> CatalogingResponse:
     """Start cataloging a database in the background."""
+    # Use database name from request
+    database_name = request.database
+
     # Reset any previous state
     reset_cataloging(database_name)
 
@@ -187,3 +206,62 @@ async def reset_catalog(
     """Reset cataloging state."""
     reset_cataloging(database_name)
     return {"status": "reset", "message": "Cataloging state cleared"}
+
+
+@router.post("/discover", response_model=DatabaseListResponse)
+async def discover_databases(
+    request: ConnectionRequest,
+) -> DatabaseListResponse:
+    """Discover available databases on a PostgreSQL/MySQL server."""
+    # System databases to exclude
+    system_dbs = {
+        "postgres",
+        "template0",
+        "template1",
+        "information_schema",
+        "mysql",
+        "sys",
+        "performance_schema",
+    }
+
+    try:
+        # Connect to default database to list others
+        config = DatabaseConfig(
+            db_type=request.db_type,
+            host=request.host,
+            port=request.port,
+            database="postgres" if request.db_type == "postgresql" else "mysql",
+            username=request.username,
+            password=request.password,
+        )
+
+        connector = PostgreSQLConnector(config)
+        connector.connect()
+
+        if not connector.test_connection():
+            raise HTTPException(status_code=400, detail="Cannot connect to server")
+
+        # Query available databases
+        if request.db_type == "postgresql":
+            query = "SELECT datname FROM pg_database WHERE datistemplate = false"
+        else:
+            query = "SHOW DATABASES"
+
+        cursor = connector.conn.cursor()
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        cursor.close()
+        connector.close()
+
+        # Filter out system databases
+        databases = [row[0] for row in rows if row[0] not in system_dbs]
+        databases.sort()
+
+        return DatabaseListResponse(databases=databases, count=len(databases))
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=400, detail=f"Failed to discover databases: {e}"
+        )

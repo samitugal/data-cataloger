@@ -12,6 +12,7 @@ export function useLiveCataloging() {
   const [isConnected, setIsConnected] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [duration, setDuration] = useState<number | null>(null)
+  const [databaseName, setDatabaseName] = useState<string>('northwind')
 
   const isRunning = useCatalogStore((s) => s.isRunning)
   const addTable = useCatalogStore((s) => s.addTable)
@@ -49,7 +50,7 @@ export function useLiveCataloging() {
   )
 
   const { disconnect } = useSSE({
-    url: '/api/progress',
+    url: `/api/progress?database_name=${encodeURIComponent(databaseName)}`,
     onMessage: handleSSEMessage,
     onError: () => setError('Connection lost'),
     enabled: isConnected,
@@ -59,6 +60,7 @@ export function useLiveCataloging() {
     async (config: CatalogingRequest) => {
       setError(null)
       setDuration(null)
+      setDatabaseName(config.database)
 
       try {
         const response = await api.startCataloging(config)

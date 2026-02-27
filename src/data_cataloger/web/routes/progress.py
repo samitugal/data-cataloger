@@ -4,12 +4,10 @@ import asyncio
 import json
 from collections.abc import AsyncGenerator
 from dataclasses import dataclass, field
-from typing import Annotated, Any
+from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from sse_starlette.sse import EventSourceResponse
-
-from data_cataloger.web.dependencies import get_database_name
 
 router = APIRouter(prefix="/api/progress", tags=["progress"])
 
@@ -108,7 +106,7 @@ async def progress_generator(
 
 @router.get("")
 async def progress_stream(
-    database_name: Annotated[str, Depends(get_database_name)],
+    database_name: str = "northwind",
 ) -> EventSourceResponse:
     """SSE stream for cataloging progress updates."""
     return EventSourceResponse(progress_generator(database_name))

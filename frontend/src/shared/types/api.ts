@@ -72,3 +72,16 @@ export interface HeartbeatEvent {
   processed?: number
   total?: number
 }
+
+export interface ConnectionRequest {
+  host: string
+  port: number
+  username: string
+  password: string
+  db_type: 'postgresql' | 'mysql'
+}
+
+export interface DatabaseDiscoveryResponse {
+  databases: string[]
+  count: number
+}

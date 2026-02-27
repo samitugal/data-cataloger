@@ -4,6 +4,8 @@ import type {
   GraphData,
   CatalogingRequest,
   CatalogingResponse,
+  ConnectionRequest,
+  DatabaseDiscoveryResponse,
   Sensitivity,
 } from '@/shared/types/api'
 
@@ -59,6 +61,12 @@ export const api = {
     }),
 
   resetCataloging: () => request<{ status: string }>('/cataloging/reset', { method: 'POST' }),
+
+  discoverDatabases: (data: ConnectionRequest) =>
+    request<DatabaseDiscoveryResponse>('/cataloging/discover', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
 }
 
 export { ApiError }

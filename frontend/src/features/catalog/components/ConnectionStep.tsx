@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Database, Server, Key, User, ArrowRight } from 'lucide-react'
+import { Database, Server, Key, User, ArrowRight, RefreshCw } from 'lucide-react'
 import { Button } from '@/shared/components/ui/Button'
 import { Input } from '@/shared/components/ui/Input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/Card'
 import { useWizardStore } from '@/shared/stores/wizardStore'
 import { useCatalogStore } from '@/shared/stores/catalogStore'
 import { api } from '@/shared/api/client'
-import type { CatalogingRequest } from '@/shared/types/api'
+import type { CatalogingRequest, ConnectionRequest } from '@/shared/types/api'
 
 export function ConnectionStep() {
   const dbConfig = useWizardStore((s) => s.dbConfig)
@@ -16,16 +16,46 @@ export function ConnectionStep() {
 
   const [config, setConfig] = useState<CatalogingRequest>(
     dbConfig || {
-      host: 'postgres',
+      host: 'localhost',
       port: 5432,
-      database: 'northwind',
+      database: '',
       username: 'postgres',
       password: 'postgres',
       db_type: 'postgresql',
     }
   )
   const [isLoading, setIsLoading] = useState(false)
+  const [isDiscovering, setIsDiscovering] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [availableDatabases, setAvailableDatabases] = useState<string[]>([])
+  const [isConnected, setIsConnected] = useState(false)
+
+  const handleDiscover = async () => {
+    setError(null)
+    setIsDiscovering(true)
+
+    try {
+      const connectionConfig: ConnectionRequest = {
+        host: config.host,
+        port: config.port,
+        username: config.username,
+        password: config.password,
+        db_type: config.db_type,
+      }
+      const response = await api.discoverDatabases(connectionConfig)
+      setAvailableDatabases(response.databases)
+      setIsConnected(true)
+      // Auto-select first database if only one
+      if (response.databases.length === 1) {
+        setConfig({ ...config, database: response.databases[0] })
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to connect')
+      setIsConnected(false)
+    } finally {
+      setIsDiscovering(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -92,19 +122,6 @@ export function ConnectionStep() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Database className="h-4 w-4 text-muted-foreground" />
-                Database Name
-              </label>
-              <Input
-                value={config.database}
-                onChange={(e) => setConfig({ ...config, database: e.target.value })}
-                placeholder="northwind"
-                disabled={isLoading}
-              />
-            </div>
-
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label className="text-sm font-medium flex items-center gap-2">
@@ -115,7 +132,7 @@ export function ConnectionStep() {
                   value={config.username}
                   onChange={(e) => setConfig({ ...config, username: e.target.value })}
                   placeholder="postgres"
-                  disabled={isLoading}
+                  disabled={isLoading || isConnected}
                 />
               </div>
               <div className="space-y-2">
@@ -128,7 +145,7 @@ export function ConnectionStep() {
                   value={config.password}
                   onChange={(e) => setConfig({ ...config, password: e.target.value })}
                   placeholder="••••••••"
-                  disabled={isLoading}
+                  disabled={isLoading || isConnected}
                 />
               </div>
             </div>
@@ -163,22 +180,69 @@ export function ConnectionStep() {
               </div>
             </div>
 
+            {!isConnected ? (
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={handleDiscover}
+                disabled={isDiscovering || !config.host || !config.username}
+              >
+                {isDiscovering ? (
+                  <>
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <Database className="mr-2 h-4 w-4" />
+                    Connect & Discover Databases
+                  </>
+                )}
+              </Button>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium flex items-center gap-2">
+                    <Database className="h-4 w-4 text-muted-foreground" />
+                    Select Database
+                  </label>
+                  <select
+                    value={config.database}
+                    onChange={(e) => setConfig({ ...config, database: e.target.value })}
+                    disabled={isLoading}
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm"
+                  >
+                    <option value="">-- All Databases --</option>
+                    {availableDatabases.map((db) => (
+                      <option key={db} value={db}>
+                        {db}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-muted-foreground">
+                    {availableDatabases.length} database(s) found. Leave empty to catalog all.
+                  </p>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    'Cataloging...'
+                  ) : (
+                    <>
+                      Start Cataloging
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </>
+            )}
+
             {error && (
               <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm">
                 {error}
               </div>
             )}
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                'Connecting...'
-              ) : (
-                <>
-                  Start Cataloging
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </>
-              )}
-            </Button>
           </form>
         </CardContent>
       </Card>
