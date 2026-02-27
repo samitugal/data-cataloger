@@ -1,3 +1,60 @@
+# Phase 12 Summary - Dynamic Database Discovery
+
+## Date: 2026-02-27
+
+## Overview
+
+Added dynamic database discovery and selection feature. Users can now connect to a PostgreSQL/MySQL server, discover available databases, and choose to catalog a specific database or all databases at once. Fixed critical SSE parameter bug that prevented real-time table rendering.
+
+## Completed Tasks
+
+### 1. Database Discovery Endpoint
+- Added `/api/cataloging/discover` endpoint
+- Lists all user databases (excludes system DBs)
+- Supports PostgreSQL and MySQL
+
+### 2. Frontend Database Selection
+- "Connect & Discover Databases" button
+- Combobox for database selection
+- "All Databases" option for bulk cataloging
+
+### 3. SSE Parameter Fix
+- Fixed `database` → `database_name` parameter in CatalogStep.tsx
+- Real-time table rendering now works correctly
+- Verified with Playwright end-to-end test
+
+### 4. All Databases Support
+- Backend handles empty database name
+- Discovers and catalogs all user databases in parallel
+- Skips system databases automatically
+
+## Key Files Modified
+
+| File | Changes |
+|------|---------|
+| `cataloging.py` | discover_databases endpoint, all-databases support |
+| `ConnectionStep.tsx` | Database discovery UI, combobox |
+| `CatalogStep.tsx` | SSE parameter fix (database_name) |
+| `useSSE.ts` | Debug logging (removed) |
+| `client.ts` | discoverDatabases API method |
+| `api.ts` | ConnectionRequest, DatabaseDiscoveryResponse types |
+
+## Commits
+
+| Hash | Message |
+|------|---------|
+| `256c59d` | fix: SSE parameter database -> database_name |
+| `9a57382` | fix: SSE real-time rendering working correctly |
+| `3e81cbf` | feat: support cataloging all databases when none selected |
+
+## Bug Fixes
+
+1. **SSE Parameter Mismatch** - Frontend used `database`, backend expected `database_name`
+2. **All Databases Error** - Empty database string caused validation error
+3. **Real-time Rendering** - Tables now appear as they are cataloged
+
+---
+
 # Phase 8 Summary - UI/UX Revamp
 
 ## Date: 2026-02-26

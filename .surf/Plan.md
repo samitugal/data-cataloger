@@ -25,17 +25,37 @@
 - Pop-in animations
 - Dynamic popup sizing
 
-## Next Phase: Phase 9
+### Phase 9: MCP Server ✅
+- stdio transport for Windsurf/Claude Desktop
+- 11 MCP tools for catalog interaction
+- Onboarding with database discovery
+
+### Phase 10: Semantic Search ✅
+- OpenAI text-embedding-3-small
+- Neo4j vector index
+- Cosine similarity search
+
+### Phase 11: Export/Import ✅
+- JSON/YAML/Markdown export
+- Import functionality
+- MCP tool integration
+
+### Phase 12: Dynamic Database Discovery ✅
+- Database discovery endpoint
+- Frontend database selection UI
+- "All Databases" cataloging support
+- SSE parameter fix for real-time rendering
+
+## Next Phase: Phase 13
 
 ### Potential Features
 1. **Drag & Drop Canvas** - Move cards around manually
 2. **Zoom & Pan** - Canvas navigation controls
-3. **Export Catalog** - JSON/CSV export functionality
-4. **Search & Filter** - Advanced table filtering
-5. **Edit Metadata** - Manual metadata editing
-6. **Multi-database Support** - Connect multiple databases
-7. **User Authentication** - Login/logout functionality
-8. **Catalog History** - Track changes over time
+3. **Data Lineage** - Track data flow between tables
+4. **Edit Metadata** - Manual metadata editing
+5. **User Authentication** - Login/logout functionality
+6. **Catalog History** - Track changes over time
+7. **Schema Diff** - Compare catalog versions
 
 ### Technical Improvements
 1. **Performance** - Virtualization for large catalogs

@@ -11,6 +11,8 @@ Data Cataloger is an AI-powered database cataloging system that automatically an
 - **Phase 8**: UI/UX Revamp - ✅ Complete
 - **Phase 9**: MCP Server - ✅ Complete
 - **Phase 10**: Semantic Search - ✅ Complete
+- **Phase 11**: Export/Import - ✅ Complete
+- **Phase 12**: Dynamic Database Discovery - ✅ Complete
 
 ## Tech Stack
 
@@ -178,6 +180,16 @@ make lint             # Lint code
 | API Endpoints | ✅ Complete |
 | MCP Tool | ✅ Complete |
 
+## Phase 12 - Dynamic Database Discovery
+
+| Feature | Status |
+|---------|--------|
+| Database Discovery Endpoint | ✅ Complete |
+| Frontend Database Selection UI | ✅ Complete |
+| "All Databases" Cataloging | ✅ Complete |
+| SSE Parameter Fix (database_name) | ✅ Complete |
+| Real-time Table Rendering | ✅ Complete |
+
 ## Graph Structure
 
 ```
@@ -219,4 +231,4 @@ make lint             # Lint code
 
 ## Last Updated
 
-2026-02-27 - Multi-database support + MCP onboarding
+2026-02-27 - Phase 12: Dynamic Database Discovery + SSE fixes
