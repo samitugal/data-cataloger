@@ -68,10 +68,56 @@ def create_mcp_server() -> Server:
     server = Server("data-cataloger")
     state = MCPServerState()
 
+    def _check_onboarding(repo: GraphRepository) -> dict[str, Any] | None:
+        """Check if any databases are cataloged. Returns error dict if not."""
+        databases = repo.list_databases()
+        if not databases:
+            return {
+                "error": True,
+                "code": "NO_DATABASES_CATALOGED",
+                "message": (
+                    "No databases have been cataloged yet. "
+                    "Please catalog a database first using the web UI at "
+                    "http://localhost:8000"
+                ),
+                "setup_url": "http://localhost:8000",
+            }
+        return None
+
+    def _check_database_exists(
+        repo: GraphRepository, database_name: str
+    ) -> dict[str, Any] | None:
+        """Check if specific database exists. Returns error dict if not."""
+        if not repo.database_exists(database_name):
+            databases = repo.list_databases()
+            available = [db["name"] for db in databases]
+            return {
+                "error": True,
+                "code": "DATABASE_NOT_FOUND",
+                "message": f"Database '{database_name}' not found in catalog.",
+                "available_databases": available,
+                "hint": (
+                    f"Available databases: {available}. "
+                    "Catalog a new database at http://localhost:8000"
+                    if available
+                    else "No databases cataloged. Visit http://localhost:8000"
+                ),
+            }
+        return None
+
     @server.list_tools()
     async def list_tools() -> list[Tool]:
         """List available MCP tools."""
         return [
+            Tool(
+                name="list_databases",
+                description="List all cataloged databases. Call this first.",
+                inputSchema={
+                    "type": "object",
+                    "properties": {},
+                    "required": [],
+                },
+            ),
             Tool(
                 name="list_tables",
                 description="List all cataloged tables in a database",
@@ -293,11 +339,50 @@ def create_mcp_server() -> Server:
     return server
 
 
-def _execute_tool(name: str, args: dict[str, Any], state: MCPServerState) -> dict:
+def _execute_tool(
+    name: str,
+    args: dict[str, Any],
+    state: MCPServerState,
+) -> dict:
     """Execute a tool and return the result."""
     repo = state.repository
     if not repo:
         return {"error": True, "message": "Not connected to database"}
+
+    # list_databases doesn't require onboarding check
+    if name == "list_databases":
+        databases = repo.list_databases()
+        if not databases:
+            return {
+                "databases": [],
+                "count": 0,
+                "message": (
+                    "No databases cataloged yet. "
+                    "Visit http://localhost:8000 to catalog your first database."
+                ),
+            }
+        return {
+            "databases": databases,
+            "count": len(databases),
+        }
+
+    # All other tools require a database_name - check it exists
+    if "database_name" in args:
+        database_name = args["database_name"]
+        if not repo.database_exists(database_name):
+            databases = repo.list_databases()
+            available = [db["name"] for db in databases]
+            return {
+                "error": True,
+                "code": "DATABASE_NOT_FOUND",
+                "message": f"Database '{database_name}' not found in catalog.",
+                "available_databases": available,
+                "hint": (
+                    f"Available: {available}. Add at http://localhost:8000"
+                    if available
+                    else "No databases cataloged. Visit http://localhost:8000"
+                ),
+            }
 
     if name == "list_tables":
         entries = repo.list_tables(args["database_name"])

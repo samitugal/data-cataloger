@@ -35,6 +35,61 @@ class GraphRepository:
         self._driver = driver
         self._database = database
 
+    def list_databases(self) -> list[dict[str, str]]:
+        """List all cataloged databases.
+
+        Returns:
+            List of dicts with keys: name, type, created_at, table_count
+        """
+        query = """
+        MATCH (db:Database)
+        OPTIONAL MATCH (db)-[:HAS_TABLE]->(t:Table)
+        WHERE t.description IS NOT NULL
+        RETURN db.name AS name,
+               db.type AS type,
+               db.created_at AS created_at,
+               count(t) AS table_count
+        ORDER BY db.name
+        """
+        records, _, _ = self._driver.execute_query(
+            query,
+            database_=self._database,
+        )
+
+        return [
+            {
+                "name": record["name"],
+                "type": record["type"],
+                "created_at": record["created_at"],
+                "table_count": record["table_count"],
+            }
+            for record in records
+        ]
+
+    def database_exists(self, database_name: str) -> bool:
+        """Check if a database has been cataloged.
+
+        Args:
+            database_name: Name of the database to check
+
+        Returns:
+            True if database exists and has at least one cataloged table
+        """
+        query = """
+        MATCH (db:Database {name: $database_name})-[:HAS_TABLE]->(t:Table)
+        WHERE t.description IS NOT NULL
+        RETURN count(t) > 0 AS exists
+        """
+        records, _, _ = self._driver.execute_query(
+            query,
+            database_name=database_name,
+            database_=self._database,
+        )
+
+        if not records:
+            return False
+        return records[0]["exists"]
+
     def get_table(self, table_name: str, database_name: str) -> CatalogEntry | None:
         """Retrieve catalog entry for a specific table.
 

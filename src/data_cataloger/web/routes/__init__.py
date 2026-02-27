@@ -1,6 +1,7 @@
 """API route modules."""
 
 from data_cataloger.web.routes.cataloging import router as cataloging_router
+from data_cataloger.web.routes.databases import router as databases_router
 from data_cataloger.web.routes.export import router as export_router
 from data_cataloger.web.routes.graph import router as graph_router
 from data_cataloger.web.routes.progress import router as progress_router
@@ -12,4 +13,5 @@ __all__ = [
     "progress_router",
     "cataloging_router",
     "export_router",
+    "databases_router",
 ]
