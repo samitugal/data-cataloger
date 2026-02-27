@@ -142,9 +142,10 @@ make lint             # Lint code
 - Docker image for portable deployment
 - Stateful Neo4j connection
 
-### MCP Tools (10 total)
+### MCP Tools (11 total)
 | Tool | Description |
 |------|-------------|
+| `list_databases` | List all cataloged databases (call first!) |
 | `list_tables` | List all cataloged tables |
 | `get_table` | Get table details with FK |
 | `search_tables` | Keyword search |
@@ -155,6 +156,11 @@ make lint             # Lint code
 | `traverse_path` | Find path between tables |
 | `semantic_search` | Vector similarity search |
 | `export_catalog` | Export in JSON/YAML/Markdown |
+
+### MCP Onboarding
+- `list_databases` tool shows available databases
+- Tools return helpful errors if database not found
+- Error includes available databases and setup URL
 
 ### Semantic Search (Phase 10)
 - OpenAI `text-embedding-3-small` (1536 dim)
@@ -185,4 +191,4 @@ make lint             # Lint code
 
 ## Last Updated
 
-2026-02-26 - Phase 11 Complete (Export/Import) + Code Cleanup
+2026-02-27 - Multi-database support + MCP onboarding
