@@ -1,18 +1,20 @@
 # Data Cataloger
 
-Automatically document legacy databases using LLM-powered analysis.
+AI-powered database documentation and metadata management system.
 
 ## Overview
 
-Data Cataloger helps teams understand large, undocumented databases by using AI to infer table purposes, data sensitivity levels, and usage patterns. Instead of manually documenting hundreds of tables, the tool analyzes schema metadata and relationships to generate comprehensive catalog documentation.
+Data Cataloger helps teams understand large, undocumented databases by using AI to infer table purposes, data sensitivity levels, and usage patterns. It stores enriched metadata in a Neo4j knowledge graph, enabling semantic search and relationship exploration.
 
 ## Key Features
 
-- **Multi-database Support**: Works with PostgreSQL and MySQL databases
-- **AI-Powered Analysis**: Uses LLM to infer table purposes and relationships
-- **Graph Storage**: Stores catalog data in Neo4j to preserve table relationships
-- **Web Visualization**: Interactive interface for browsing and searching catalog data
-- **Intelligent Processing**: Analyzes independent tables first to provide context for dependent tables
+- **Multi-Database Support**: Catalog multiple PostgreSQL/MySQL databases
+- **AI-Powered Analysis**: LLM-generated descriptions, sensitivity classification, example queries
+- **Semantic Search**: Vector similarity search using OpenAI embeddings
+- **Knowledge Graph**: Neo4j storage with MetadataRepository as central index
+- **MCP Integration**: 11 tools for AI assistant integration (Claude, Windsurf)
+- **Export/Import**: JSON, YAML, Markdown documentation export
+- **Interactive UI**: Real-time cataloging visualization with relationship canvas
 
 ## Requirements
 
@@ -53,24 +55,52 @@ The project follows a modular architecture with five core modules:
 - **storage/**: Neo4j graph storage for catalog data
 - **web/**: Web interface for catalog visualization and search
 
+## Graph Structure
+
+Data is stored in Neo4j with a hierarchical structure:
+
+```
+(MetadataRepository {name: 'default'})
+    │
+    └──[:CONTAINS_DATABASE]──> (Database {name, type})
+                                    │
+                                    └──[:HAS_TABLE]──> (Table {name, description, sensitivity, embedding})
+                                    │
+                                    └──[:REFERENCES_VIA]──> (Table) [FK relationships]
+```
+
 ## MCP Server
 
 Data Cataloger includes an MCP (Model Context Protocol) server for AI assistant integration.
 
-### Available Tools
+### Available Tools (11 total)
 
 | Tool | Description |
 |------|-------------|
-| `list_tables` | List all cataloged tables |
-| `get_table` | Get table details with FK |
+| `list_databases` | List all cataloged databases (call first!) |
+| `list_tables` | List all cataloged tables in a database |
+| `get_table` | Get table details with FK relationships |
 | `search_tables` | Keyword search in descriptions |
-| `filter_by_sensitivity` | Filter by sensitivity level |
-| `get_relationships` | Get FK relationships |
-| `get_graph` | Full relationship graph |
+| `filter_by_sensitivity` | Filter by sensitivity (PII, financial, internal, public) |
+| `get_relationships` | Get FK relationships for a table |
+| `get_graph` | Full relationship graph for visualization |
 | `get_neighbors` | Get table with connected neighbors |
-| `traverse_path` | Find path between tables |
-| `semantic_search` | Vector similarity search |
-| `export_catalog` | Export in JSON/YAML/Markdown |
+| `traverse_path` | Find path between two tables |
+| `semantic_search` | Vector similarity search using embeddings |
+| `export_catalog` | Export in JSON/YAML/Markdown format |
+
+### Onboarding
+
+When no databases are cataloged, MCP tools return helpful error messages:
+```json
+{
+  "error": true,
+  "code": "DATABASE_NOT_FOUND",
+  "message": "Database 'xyz' not found in catalog.",
+  "available_databases": ["northwind"],
+  "hint": "Available: ['northwind']. Add at http://localhost:8000"
+}
+```
 
 ### Configuration
 

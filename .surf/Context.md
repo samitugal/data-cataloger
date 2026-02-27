@@ -178,6 +178,34 @@ make lint             # Lint code
 | API Endpoints | ✅ Complete |
 | MCP Tool | ✅ Complete |
 
+## Graph Structure
+
+```
+(MetadataRepository {name: 'default'})
+    │
+    └──[:CONTAINS_DATABASE]──> (Database {name, type})
+                                    │
+                                    └──[:HAS_TABLE]──> (Table)
+                                    │
+                                    └──[:REFERENCES_VIA]──> (Table)
+```
+
+### Node Properties
+
+| Node | Properties |
+|------|------------|
+| MetadataRepository | name, created_at |
+| Database | name, type, created_at |
+| Table | name, database, description, sensitivity, example_queries, embedding, created_at, updated_at |
+
+### Relationships
+
+| Relationship | Description |
+|--------------|-------------|
+| CONTAINS_DATABASE | MetadataRepository → Database |
+| HAS_TABLE | Database → Table |
+| REFERENCES_VIA | Table → Table (FK with fk_column, referenced_column, constraint_name) |
+
 ## Code Quality
 
 | Metric | Value |
